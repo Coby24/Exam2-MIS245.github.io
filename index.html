@@ -87,7 +87,7 @@
             // Chapter 8: Security and Control (15 Qs)
             { id: 48, chapter: "Chapter 8", difficulty: 1, question: "Which of the following refers to policies, procedures, and technical measures used to prevent unauthorized access, alteration, theft, or physical damage to information systems?", options: ["A) Security", "B) Controls", "C) Benchmarking", "D) Algorithms"], correctAnswer: "A) Security" },
             { id: 49, chapter: "Chapter 8", difficulty: 2, question: "TRUE or FALSE: Legislation requiring private or governmental entities to notify individuals of security breaches involving personally identifiable information has been enacted in all 50 states.", options: ["TRUE", "FALSE"], correctAnswer: "TRUE" },
-            { id: 50, chapter: "Chapter 8", difficulty: 2, question: "TRUE or FALSE: Zero defects cannot be achieved in larger software programs because fully testing programs that contain thousands of choices and millions of paths would require thousands of years.", options: ["TRUE", "FALSE"], correctAnswer: "TRUE" },
+            { id: 50, chapter: "Chapter 8", difficulty: 2, question: "TRUE or FALSE: Zero defects cannot be achieved in larger software programs because fully testing programs that contain thousands of choices and millions of paths would require thousands of years. (TRUE/FALSE)", options: ["TRUE", "FALSE"], correctAnswer: "TRUE" },
             { id: 51, chapter: "Chapter 8", difficulty: 1, question: "The Sarbanes-Oxley Act ________.", options: ["A) requires financial institutions to ensure the security of customer data", "B) specifies best practices in information systems security and control", "C) imposes responsibility on companies and management to safeguard the accuracy of financial information", "D) outlines medical security and privacy rules"], correctAnswer: "C) imposes responsibility on companies and management to safeguard the accuracy of financial information" },
             { id: 52, chapter: "Chapter 8", difficulty: 2, question: "What is a 'Trojan Horse' in the context of security?", options: ["A) A program that claims to be benign but does something malicious", "B) A virus that replicates itself across networks", "C) A hardware device used for sniffing traffic", "D) A type of firewall"], correctAnswer: "A) A program that claims to be benign but does something malicious" },
             { id: 53, chapter: "Chapter 8", difficulty: 3, question: "A Denial-of-Service (DoS) attack is successful because it:", options: ["A) Steals user passwords", "B) Overloads a network server with too many requests", "C) Installs spyware on a client computer", "D) Physically damages the server hardware"], correctAnswer: "B) Overloads a network server with too many requests" },
@@ -118,7 +118,9 @@
             studyFilters: {
                 chapters: ['Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8'],
                 difficulties: [1, 2, 3]
-            }
+            },
+            // NEW: History of the last quiz's question IDs to prevent immediate repeats
+            recentlyUsedQuizIds: [],
         };
 
         const appContainer = document.getElementById('app');
@@ -146,15 +148,36 @@
 
             if (mode === 'test') {
                 appState.currentQuestionList = [...questionsData];
+                shuffleArray(appState.currentQuestionList);
             } else if (mode === 'quiz') {
-                // Select 10 random questions
-                let shuffledQuestions = [...questionsData];
-                shuffleArray(shuffledQuestions);
-                appState.currentQuestionList = shuffledQuestions.slice(0, 10);
-            }
+                const QUIZ_SIZE = 10;
+                
+                // 1. Separate questions into 'unseen' and 'seen' based on history
+                const unseenQuestions = questionsData.filter(q => !appState.recentlyUsedQuizIds.includes(q.id));
+                const seenQuestions = questionsData.filter(q => appState.recentlyUsedQuizIds.includes(q.id));
 
-            // Shuffle the question list just in case, for both modes.
-            shuffleArray(appState.currentQuestionList);
+                // 2. Shuffle both pools
+                shuffleArray(unseenQuestions);
+                shuffleArray(seenQuestions);
+
+                // 3. Prioritize 'unseen' questions
+                let selectedQuestions = [];
+                
+                // Take as many 'unseen' questions as available, up to QUIZ_SIZE
+                const unseenToTake = Math.min(unseenQuestions.length, QUIZ_SIZE);
+                selectedQuestions.push(...unseenQuestions.slice(0, unseenToTake));
+
+                // 4. Fill remaining slots with 'seen' questions if necessary
+                const remainingSlots = QUIZ_SIZE - selectedQuestions.length;
+                if (remainingSlots > 0) {
+                    selectedQuestions.push(...seenQuestions.slice(0, remainingSlots));
+                }
+
+                // 5. Final check (should always be QUIZ_SIZE or less) and shuffle for good measure
+                shuffleArray(selectedQuestions);
+                appState.currentQuestionList = selectedQuestions;
+
+            }
 
             appState.view = 'quiz'; // Reusing the quiz view for test/quiz mode
             render();
@@ -198,6 +221,10 @@
             appState.isAnswered = false;
 
             if (appState.currentQuestionIndex >= appState.currentQuestionList.length) {
+                // Update history if it was a quiz mode before showing results
+                if (appState.mode === 'quiz') {
+                    appState.recentlyUsedQuizIds = appState.currentQuestionList.map(q => q.id);
+                }
                 appState.view = 'results';
             }
             render();
@@ -264,10 +291,10 @@
                                 Start Test Mode
                             </button>
                         </div>
-                        <!-- Quiz Mode -->
+                        <!-- Quiz Mode (Improved Selection) -->
                         <div class="p-6 bg-indigo-50 border-2 border-indigo-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-indigo-400">
                             <h2 class="text-2xl font-bold text-indigo-800">Quiz Mode</h2>
-                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 random questions</span> for a quick check.</p>
+                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 smart-selected questions</span> for a quick check.</p>
                             <button onclick="startMode('quiz')" class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
                                 Start Quiz Mode
                             </button>
@@ -286,8 +313,6 @@
         }
 
         function renderQuiz() {
-            // ... (The renderQuiz logic for Test/Quiz modes remains the same) ...
-
             const currentQ = appState.currentQuestionList[appState.currentQuestionIndex];
             if (!currentQ) {
                 appState.view = 'results';
@@ -389,8 +414,6 @@
         }
 
         function renderResults() {
-            // ... (The renderResults logic remains the same) ...
-
             const totalQuestions = appState.currentQuestionList.length;
             const correctCount = appState.userAnswers.filter(a => a.correct).length;
             const scorePercentage = ((correctCount / totalQuestions) * 100).toFixed(0);
