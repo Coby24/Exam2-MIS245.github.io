@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Tracking - MIS245 Exam 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.3/plotly.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.179.1/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .vanta-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .progress-circle { transform: rotate(-90deg); }
+        .achievement-badge { animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50">
+    <div id="vanta-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="relative z-10 glass-effect border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <i class="fas fa-graduation-cap text-2xl text-blue-600"></i>
+                        <h1 class="text-xl font-bold text-gray-800">MIS245 Study Guide</h1>
+                    </a>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="study.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Study Mode</a>
+                    <a href="test.html" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Test Mode</a>
+                    <a href="progress.html" class="text-blue-600 font-medium">Progress</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="relative z-10 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="glass-effect rounded-2xl p-8">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-line text-blue-600 mr-3"></i>
+                    Progress Tracking
+                </h1>
+                <p class="text-lg text-gray-600 mb-6">
+                    Monitor your learning journey and celebrate your achievements.
+                </p>
+                
+                <!-- Quick Stats -->
+                <div class="grid md:grid-cols-4 gap-6 mt-8">
+                    <div class="stat-card glass-effect rounded-xl p-6">
+                        <div class="text-3xl font-bold text-blue-600 mb-2" id="totalQuestionsAnswered">0</div>
+                        <div class="text-gray-600 text-sm">Questions Answered</div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-xl p-6">
+                        <div class="text-3xl font-bold text-green-600 mb-2" id="averageScore">0%</div>
+                        <div class="text-gray-600 text-sm">Average Score</div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-xl p-6">
+                        <div class="text-3xl font-bold text-purple-600 mb-2" id="testsCompleted">0</div>
+                        <div class="text-gray-600 text-sm">Tests Completed</div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-xl p-6">
+                        <div class="text-3xl font-bold text-orange-600 mb-2" id="studyStreak">0</div>
+                        <div class="text-gray-600 text-sm">Day Streak</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Overview -->
+    <section class="relative z-10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Score Trend Chart -->
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-chart-area text-blue-600 mr-2"></i>
+                        Score Trend
+                    </h3>
+                    <div id="scoreChart" style="height: 300px;"></div>
+                </div>
+                
+                <!-- Chapter Performance -->
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-pie-chart text-green-600 mr-2"></i>
+                        Chapter Performance
+                    </h3>
+                    <div id="chapterChart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Analytics -->
+    <section class="relative z-10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Difficulty Analysis -->
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-brain text-purple-600 mr-2"></i>
+                        Difficulty Analysis
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Easy</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-20 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                                <span class="text-sm font-semibold text-green-600">85%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Medium</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-20 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 72%"></div>
+                                </div>
+                                <span class="text-sm font-semibold text-yellow-600">72%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Hard</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-20 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 58%"></div>
+                                </div>
+                                <span class="text-sm font-semibold text-red-600">58%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Time Analysis -->
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-clock text-orange-600 mr-2"></i>
+                        Time Analysis
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Avg. Time per Question:</span>
+                            <span class="font-semibold">1:24</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Fastest Answer:</span>
+                            <span class="font-semibold text-green-600">0:12</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Slowest Answer:</span>
+                            <span class="font-semibold text-red-600">3:45</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Total Study Time:</span>
+                            <span class="font-semibold">2h 34m</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Achievements -->
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                        Achievements
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="achievement-badge flex items-center p-3 bg-yellow-100 rounded-lg">
+                            <i class="fas fa-medal text-yellow-600 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">First Test Complete</div>
+                                <div class="text-sm text-gray-600">Completed your first test</div>
+                            </div>
+                        </div>
+                        <div class="achievement-badge flex items-center p-3 bg-green-100 rounded-lg">
+                            <i class="fas fa-fire text-green-600 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">Study Streak</div>
+                                <div class="text-sm text-gray-600">3 days in a row</div>
+                            </div>
+                        </div>
+                        <div class="achievement-badge flex items-center p-3 bg-blue-100 rounded-lg">
+                            <i class="fas fa-star text-blue-600 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">Chapter Master</div>
+                                <div class="text-sm text-gray-600">90% in Chapter 5</div>
+                            </div>
+                        </div>
+                        <div class="achievement-badge flex items-center p-3 bg-purple-100 rounded-lg opacity-50">
+                            <i class="fas fa-rocket text-purple-600 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">Speed Demon</div>
+                                <div class="text-sm text-gray-600">Complete test in under 15 min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Study Recommendations -->
+    <section class="relative z-10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-effect rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                    Study Recommendations
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-target text-red-500 mr-2"></i>
+                            Areas for Improvement
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="p-4 bg-red-50 rounded-lg border-l-4 border-red-400">
+                                <div class="font-semibold text-red-800">Chapter 6: Databases</div>
+                                <div class="text-sm text-red-600">Focus on SQL queries and NoSQL concepts</div>
+                                <div class="text-xs text-red-500 mt-1">Current: 65% | Target: 80%</div>
+                            </div>
+                            <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
+                                <div class="font-semibold text-yellow-800">Hard Questions</div>
+                                <div class="text-sm text-yellow-600">Practice more complex scenarios</div>
+                                <div class="text-xs text-yellow-500 mt-1">Current: 58% | Target: 75%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-star text-green-500 mr-2"></i>
+                            Strong Areas
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
+                                <div class="font-semibold text-green-800">Chapter 5: IT Infrastructure</div>
+                                <div class="text-sm text-green-600">Excellent understanding of cloud computing</div>
+                                <div class="text-xs text-green-500 mt-1">Current: 90% | Keep it up!</div>
+                            </div>
+                            <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                                <div class="font-semibold text-blue-800">Easy Questions</div>
+                                <div class="text-sm text-blue-600">Solid foundation knowledge</div>
+                                <div class="text-xs text-blue-500 mt-1">Current: 85% | Well done!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <div class="inline-flex items-center p-4 bg-blue-50 rounded-lg">
+                        <i class="fas fa-calendar-alt text-blue-600 mr-3"></i>
+                        <div class="text-left">
+                            <div class="font-semibold text-blue-800">Next Study Session</div>
+                            <div class="text-sm text-blue-600">Recommended: Review Chapter 6 concepts for 30 minutes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600">&copy; 2025 MIS245 Study Guide. Built for success.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.TOPOLOGY({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x3b82f6,
+            backgroundColor: 0xf8fafc
+        });
+
+        // Sample data for demonstration
+        const sampleData = {
+            scoreHistory: [
+                { date: '2025-10-15', score: 65, chapter: 'Chapter 5' },
+                { date: '2025-10-16', score: 72, chapter: 'Chapter 6' },
+                { date: '2025-10-17', score: 78, chapter: 'Chapter 7' },
+                { date: '2025-10-18', score: 82, chapter: 'Chapter 8' },
+                { date: '2025-10-19', score: 85, chapter: 'Chapter 5' },
+                { date: '2025-10-20', score: 88, chapter: 'Chapter 6' },
+                { date: '2025-10-21', score: 92, chapter: 'Chapter 7' },
+                { date: '2025-10-22', score: 89, chapter: 'Chapter 8' }
+            ],
+            chapterPerformance: {
+                'Chapter 5': { total: 12, correct: 10, percentage: 83 },
+                'Chapter 6': { total: 12, correct: 8, percentage: 67 },
+                'Chapter 7': { total: 12, correct: 11, percentage: 92 },
+                'Chapter 8': { total: 12, correct: 10, percentage: 83 }
+            }
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateStats();
+        });
+
+        function initializeCharts() {
+            // Score Trend Chart
+            const scoreData = [{
+                x: sampleData.scoreHistory.map(item => item.date),
+                y: sampleData.scoreHistory.map(item => item.score),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Test Scores',
+                line: { color: '#3b82f6', width: 3 },
+                marker: { color: '#3b82f6', size: 8 }
+            }];
+
+            const scoreLayout = {
+                title: '',
+                xaxis: { title: 'Date', showgrid: false },
+                yaxis: { title: 'Score (%)', range: [0, 100], showgrid: true, gridcolor: '#f3f4f6' },
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { family: 'Inter, sans-serif', size: 12 },
+                margin: { t: 20, r: 20, b: 50, l: 50 }
+            };
+
+            Plotly.newPlot('scoreChart', scoreData, scoreLayout, {displayModeBar: false, responsive: true});
+
+            // Chapter Performance Chart
+            const chapterData = [{
+                values: Object.values(sampleData.chapterPerformance).map(item => item.total),
+                labels: Object.keys(sampleData.chapterPerformance),
+                type: 'pie',
+                hole: 0.4,
+                marker: {
+                    colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const chapterLayout = {
+                title: '',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { family: 'Inter, sans-serif', size: 12 },
+                margin: { t: 20, r: 20, b: 20, l: 20 },
+                showlegend: false
+            };
+
+            Plotly.newPlot('chapterChart', chapterData, chapterLayout, {displayModeBar: false, responsive: true});
+        }
+
+        function updateStats() {
+            // Simulate progress data
+            const totalQuestions = 156;
+            const averageScore = 78;
+            const testsCompleted = 8;
+            const studyStreak = 3;
+
+            document.getElementById('totalQuestionsAnswered').textContent = totalQuestions;
+            document.getElementById('averageScore').textContent = `${averageScore}%`;
+            document.getElementById('testsCompleted').textContent = testsCompleted;
+            document.getElementById('studyStreak').textContent = studyStreak;
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat cards on load
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+
+            // Add hover effects to achievement badges
+            const achievementBadges = document.querySelectorAll('.achievement-badge');
+            achievementBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                badge.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+<script>
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>
