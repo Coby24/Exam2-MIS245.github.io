@@ -103,7 +103,8 @@
         ];
 
 
-        // --- 2. APP STATE MANAGEMENT ---
+        // --- 2. APP STATE MANAGEMENT & INITIALIZATION ---
+        
         let appState = {
             view: 'home', // 'home', 'quiz', 'results', 'studySetup', 'studyMode'
             mode: null, // 'test', 'quiz', or 'study'
@@ -114,16 +115,56 @@
             correctAnswer: null,
             selectedOption: null,
             isAnswered: false,
-            // New state for Study Mode filters
+            // Study Mode filters
             studyFilters: {
                 chapters: ['Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8'],
                 difficulties: [1, 2, 3]
             },
-            // NEW: History of the last quiz's question IDs to prevent immediate repeats
-            recentlyUsedQuizIds: [],
+            // NEW: History of the last 10 quiz attempts (array of arrays of question IDs)
+            quizHistory: [],
         };
 
         const appContainer = document.getElementById('app');
+        const HISTORY_KEY = 'mis245_quiz_history';
+        const MAX_HISTORY_ATTEMPTS = 10;
+
+        /**
+         * Loads quiz history from localStorage on startup.
+         */
+        function initializeAppState() {
+            const historyString = localStorage.getItem(HISTORY_KEY);
+            try {
+                const loadedHistory = historyString ? JSON.parse(historyString) : [];
+                // Ensure loaded data is an array before assigning
+                appState.quizHistory = Array.isArray(loadedHistory) ? loadedHistory : [];
+            } catch (e) {
+                console.error("Error loading quiz history from localStorage:", e);
+                appState.quizHistory = [];
+            }
+        }
+        
+        /**
+         * Saves the current quiz IDs to history and prunes the list to MAX_HISTORY_ATTEMPTS.
+         */
+        function saveQuizHistory() {
+            const currentQuizIds = appState.currentQuestionList.map(q => q.id);
+            
+            // Add the new quiz to the history
+            appState.quizHistory.push(currentQuizIds);
+            
+            // Trim the history to the last 10 attempts
+            if (appState.quizHistory.length > MAX_HISTORY_ATTEMPTS) {
+                appState.quizHistory = appState.quizHistory.slice(-MAX_HISTORY_ATTEMPTS);
+            }
+            
+            // Save back to localStorage
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(appState.quizHistory));
+            } catch (e) {
+                console.error("Error saving quiz history to localStorage:", e);
+            }
+        }
+
 
         // --- 3. HELPER FUNCTIONS ---
 
@@ -152,28 +193,32 @@
             } else if (mode === 'quiz') {
                 const QUIZ_SIZE = 10;
                 
-                // 1. Separate questions into 'unseen' and 'seen' based on history
-                const unseenQuestions = questionsData.filter(q => !appState.recentlyUsedQuizIds.includes(q.id));
-                const seenQuestions = questionsData.filter(q => appState.recentlyUsedQuizIds.includes(q.id));
+                // 1. Consolidate all IDs from the last N attempts (up to 10)
+                // flat() merges all nested arrays (each quiz attempt) into a single array of IDs
+                const recentlyUsedIds = appState.quizHistory.flat(); 
+                
+                // 2. Separate questions into 'unseen' (not in consolidated history) and 'seen'
+                const unseenQuestions = questionsData.filter(q => !recentlyUsedIds.includes(q.id));
+                const seenQuestions = questionsData.filter(q => recentlyUsedIds.includes(q.id));
 
-                // 2. Shuffle both pools
+                // 3. Shuffle both pools
                 shuffleArray(unseenQuestions);
                 shuffleArray(seenQuestions);
 
-                // 3. Prioritize 'unseen' questions
+                // 4. Prioritize 'unseen' questions
                 let selectedQuestions = [];
                 
                 // Take as many 'unseen' questions as available, up to QUIZ_SIZE
                 const unseenToTake = Math.min(unseenQuestions.length, QUIZ_SIZE);
                 selectedQuestions.push(...unseenQuestions.slice(0, unseenToTake));
 
-                // 4. Fill remaining slots with 'seen' questions if necessary
+                // 5. Fill remaining slots with 'seen' questions if necessary
                 const remainingSlots = QUIZ_SIZE - selectedQuestions.length;
                 if (remainingSlots > 0) {
                     selectedQuestions.push(...seenQuestions.slice(0, remainingSlots));
                 }
 
-                // 5. Final check (should always be QUIZ_SIZE or less) and shuffle for good measure
+                // 6. Final check and shuffle
                 shuffleArray(selectedQuestions);
                 appState.currentQuestionList = selectedQuestions;
 
@@ -221,9 +266,9 @@
             appState.isAnswered = false;
 
             if (appState.currentQuestionIndex >= appState.currentQuestionList.length) {
-                // Update history if it was a quiz mode before showing results
+                // Save quiz history before showing results (only for 'quiz' mode)
                 if (appState.mode === 'quiz') {
-                    appState.recentlyUsedQuizIds = appState.currentQuestionList.map(q => q.id);
+                    saveQuizHistory();
                 }
                 appState.view = 'results';
             }
@@ -277,6 +322,11 @@
         // --- 6. RENDER FUNCTIONS ---
 
         function renderHome() {
+            const historyCount = appState.quizHistory.length;
+            const trackingMessage = historyCount === 0 
+                ? 'No history yet. Start quizzing!'
+                : `Tracking the last ${historyCount} attempt${historyCount !== 1 ? 's' : ''} to improve variety.`;
+
             appContainer.innerHTML = `
                 <div class="text-center space-y-8">
                     <h1 class="text-4xl font-extrabold text-blue-800">MIS 245 Exam 2 Review</h1>
@@ -294,7 +344,11 @@
                         <!-- Quiz Mode (Improved Selection) -->
                         <div class="p-6 bg-indigo-50 border-2 border-indigo-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-indigo-400">
                             <h2 class="text-2xl font-bold text-indigo-800">Quiz Mode</h2>
-                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 smart-selected questions</span> for a quick check.</p>
+                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 smart-selected questions</span> for a quick check.
+                                <span class="block mt-2 text-xs text-gray-500 font-medium">
+                                    ${trackingMessage}
+                                </span>
+                            </p>
                             <button onclick="startMode('quiz')" class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
                                 Start Quiz Mode
                             </button>
@@ -639,8 +693,11 @@
             appContainer.parentElement.scrollTop = 0;
         }
 
-        // Initial call to start the application
-        document.addEventListener('DOMContentLoaded', render);
+        // Initial call to start the application: Load history first, then render
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAppState(); 
+            render();
+        });
     </script>
 </body>
 </html>
