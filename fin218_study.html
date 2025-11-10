@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIN 218 Exam Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar for better feel */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #a8a8a8;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f0f0f0; }
+
+        /* Hide the options list initially in Study Mode */
+        .study-options-hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8 flex items-center justify-center">
+
+    <div id="app" class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100 transition-all duration-500">
+        </div>
+
+    <script>
+        // --- 1. DATA STRUCTURE: 124 Questions ---
+
+        // Difficulty ranking: 1 (Easy: Definition/Recall), 2 (Medium: Application/Concept), 3 (Hard: Synthesis/Detailed Recall)
+        const questionsData = [
+            // Chapter 14 (Mortgages) - From Week9.txt
+            { id: 1, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Which of the following are important ways in which mortgage markets differ from the stock and bond markets?", options: ["A) The usual borrowers in the capital markets are government entities and businesses, whereas the usual borrowers in the mortgage markets are individuals.", "B) Most mortgages are secured by real estate, whereas the majority of capital market borrowing is unsecured.", "C) Because mortgages are made for different amounts and different maturities, developing a secondary market has been more difficult.", "D) All of the above are important differences.", "E) Only A and B of the above are important differences."], correctAnswer: "D) All of the above are important differences." },
+            { id: 2, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Which of the following are true of mortgages?", options: ["A) A mortgage is a long-term loan secured by real estate.", "B) A borrower pays off a mortgage in a combination of principal and interest payments that result in full payment of the debt by maturity.", "C) Over 72 percent of mortgage loans finance residential home purchases.", "D) All of the above are true of mortgages.", "E) Only A and B of the above are true of mortgages."], correctAnswer: "D) All of the above are true of mortgages." },
+            { id: 3, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Mortgage loans are ___________which means the borrower pays it off over time in some combination of principal and interest payments that result in full payment of the debt by maturity.", options: ["A) amortized", "B) discounted", "C) simplified", "D) balloon loans"], correctAnswer: "A) amortized" },
+            { id: 4, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Which of the following is true of mortgage interest rates?", options: ["A) Interest rates on mortgage loans are determined by three factors: current long-term market rates, the term of the mortgage, and the number of discount points paid.", "B) Mortgage interest rates tend to track along with Treasury bond rates.", "C) The interest rate on 15-year mortgages is lower than the rate on 30-year mortgages, all else the same.", "D) All of the above are true.", "E) Only A and B of the above are true."], correctAnswer: "D) All of the above are true." },
+            { id: 5, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Which of the following is true of mortgage interest rates?", options: ["A) Longer-term mortgages have lower interest rates than shorter-term mortgages.", "B) Mortgage rates are lower than Treasury bond rates because of the tax deductibility of mortgage interest rates.", "C) In exchange for points, lenders reduce interest rates on mortgage loans.", "D) All of the above are true.", "E) Only A and B of the above are true."], correctAnswer: "C) In exchange for points, lenders reduce interest rates on mortgage loans." },
+            { id: 6, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Typically, discount points should not be paid if the borrower will pay off the loan in ________ years or less.", options: ["A) 5", "B) 10", "C) 15", "D) 20"], correctAnswer: "A) 5" },
+            { id: 7, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Which of the following reduces moral hazard for the mortgage borrower?", options: ["A) Collateral", "B) Down payments", "C) Private mortgage insurance", "D) Borrower qualifications"], correctAnswer: "B) Down payments" },
+            { id: 8, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Which of the following is true of mortgage interest rates?", options: ["A) Mortgage rates are closely tied to Treasury bond rates, but mortgage rates tend to stay below Treasury rates because mortgages are secured with collateral.", "B) Longer-term mortgages have higher interest rates than shorter-term mortgages.", "C) Interest rates are higher on mortgage loans on which lenders charge points.", "D) All of the above are true.", "E) Only A and B of the above are true."], correctAnswer: "B) Longer-term mortgages have higher interest rates than shorter-term mortgages." },
+            { id: 9, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "During the early years of an amortizing mortgage loan, the lender applies", options: ["A) most of the monthly payment to the outstanding principal balance.", "B) all of the monthly payment to the outstanding principal balance.", "C) most of the monthly payment to interest on the loan.", "D) all of the monthly payment to interest on the loan.", "E) the monthly payment equally to interest on the loan and the outstanding principal balance."], correctAnswer: "C) most of the monthly payment to interest on the loan." },
+            { id: 10, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "During the last years of an amortizing mortgage loan, the lender applies", options: ["A) most of the monthly payment to the outstanding principal balance.", "B) all of the monthly payment to the outstanding principal balance.", "C) most of the monthly payment to interest on the loan.", "D) all of the monthly payment to interest on the loan.", "E) the monthly payment equally to interest on the loan and the outstanding principal balance."], correctAnswer: "A) most of the monthly payment to the outstanding principal balance." },
+            { id: 11, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "What factors are used in determining a person's FICO score?", options: ["A) Past payment history", "B) Outstanding debt", "C) Length of credit history", "D) All of the above"], correctAnswer: "D) All of the above" },
+            { id: 12, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "A borrower with a 30-year loan can create a GEM by", options: ["A) simply increasing the monthly payments beyond what is required and designating that the excess be applied entirely to the principal.", "B) converting his ARM into a conventional mortgage.", "C) converting his conventional mortgage into an ARM.", "D) converting his conventional mortgage into a GPM."], correctAnswer: "A) simply increasing the monthly payments beyond what is required and designating that the excess be applied entirely to the principal." },
+            { id: 13, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Second mortgages serve the following purposes:", options: ["A) they give borrowers a way to use the equity they have in their homes as security for another loan.", "B) they allow borrowers to get a tax deduction on loans secured by their primary residence or vacation home.", "C) they allow borrowers to convert their conventional mortgages into GEMs.", "D) all of the above.", "E) only A and B of the above."], correctAnswer: "E) only A and B of the above." },
+            { id: 14, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Piggyback mortgages are also known as", options: ["A) ARMs.", "B) reverse annuity mortgages.", "C) second mortgages.", "D) GEMs."], correctAnswer: "C) second mortgages." },
+            { id: 15, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Second mortgages serve the following purposes:", options: ["A) they give borrowers a way to use the equity they have in their homes as security for another loan.", "B) they allow borrowers to get a tax deduction on loans secured by their primary residence or vacation home.", "C) they allow borrowers to convert their conventional mortgages into GEMs.", "D) all of the above.", "E) only A and B of the above."], correctAnswer: "E) only A and B of the above." },
+            { id: 16, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "A loan-servicing agent will", options: ["A) package the loan for an investor.", "B) hold the loan in their investment portfolio.", "C) collect payments from the borrower.", "D) do both A and C of the above.", "E) do both B and C of the above."], correctAnswer: "C) collect payments from the borrower." },
+            { id: 17, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Loan servicing agents typically earn about _________per year of the total loan amount for their efforts.", options: ["A) 0.5%", "B) 1.5%", "C) 5.0%", "D) 0.25%"], correctAnswer: "D) 0.25%" },
+            { id: 18, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Mortgage loans are being obtained more frequently from", options: ["A) local banks.", "B) the internet.", "C) mortgage brokers.", "D) life insurance firms."], correctAnswer: "C) mortgage brokers." },
+            { id: 19, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "The Federal National Mortgage Association (Fannie Mae)", options: ["A) was set up to buy mortgages from thrifts so that these institutions could make more loans.", "B) funds purchases of mortgages by selling bonds to the public.", "C) provides insurance for certain mortgage contracts.", "D) does all of the above.", "E) does only A and B of the above."], correctAnswer: "E) does only A and B of the above." },
+            { id: 20, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "The most common type of mortgage-backed security is the", options: ["A) mortgage pass-through.", "B) REMIC.", "C) CDO.", "D) collateralized mortgage obligations."], correctAnswer: "A) mortgage pass-through." },
+            { id: 21, chapter: "Chapter 14 (Mortgages)", difficulty: 2, question: "Mortgage-backed securities", options: ["A) have been growing in popularity in recent years as institutional investors look for attractive investment opportunities.", "B) are securities collateralized by a pool of mortgages.", "C) are securities collateralized by both insured and uninsured mortgages.", "D) are all of the above.", "E) are only A and B of the above."], correctAnswer: "D) are all of the above." },
+            { id: 22, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "The most common type of mortgage-backed security is", options: ["A) the mortgage pass-through, a security that has the borrower's mortgage payments pass through the trustee before being disbursed to the investors.", "B) collateralized mortgage obligations, a security which reduces prepayment risk.", "C) the participation certificate, a security which passes the borrower's mortgage payments equally among all the owners of the certificates.", "D) the securitized mortgage, a security which increases the liquidity of otherwise illiquid mortgages."], correctAnswer: "A) the mortgage pass-through, a security that has the borrower's mortgage payments pass through the trustee before being disbursed to the investors." },
+            { id: 23, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "From 2000 to 2005, housing prices increased, on average, by over 40%. This run up in prices was caused by", options: ["A) speculators.", "B) an increase in subprime loans, which increased demand for new and existing houses.", "C) both A and B.", "D) None of the above are correct."], correctAnswer: "C) both A and B." },
+            { id: 24, chapter: "Chapter 14 (Mortgages)", difficulty: 1, question: "Loans made to borrowers with poor credit are known as", options: ["A) subprime loans.", "B) REMICs.", "C) PIPs.", "D) conventional mortgages."], correctAnswer: "A) subprime loans." },
+            { id: 25, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a choice between an 8% 30-year $100,000 mortgage or a 7.5% $100,000 mortgage with 2 discount points ($2,000): What is the monthly payment for the 8% mortgage?", options: ["A) $699.21", "B) $733.76", "C) $750.00", "D) $800.00"], correctAnswer: "B) $733.76" },
+            { id: 26, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a choice between an 8% 30-year $100,000 mortgage or a 7.5% $100,000 mortgage with 2 discount points ($2,000): What is the monthly payment for the 7.5% mortgage?", options: ["A) $733.76", "B) $650.50", "C) $699.21", "D) $700.00"], correctAnswer: "C) $699.21" },
+            { id: 27, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a choice between an 8% ($733.76/mo) and 7.5% ($699.21/mo) mortgage: How much will your monthly payment be reduced if you accept the 7.5% mortgage?", options: ["A) $34.55", "B) $50.00", "C) $100.00", "D) $0.00"], correctAnswer: "A) $34.55" },
+            { id: 28, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a $2,000 cost for 2 discount points and a monthly saving of $34.55: Is it worth paying the 2 discount points if you are planning to keep this house for 5 years?", options: ["A) Yes", "B) No", "C) Maybe", "D) Not enough information"], correctAnswer: "A) Yes" },
+            { id: 29, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a $2,000 cost for 2 discount points and a monthly saving of $34.55: Is it worth paying the 2 discount points if you are planning to keep this house with the same mortgage for 12 years?", options: ["A) Yes", "B) No", "C) Maybe", "D) Not enough information"], correctAnswer: "A) Yes" },
+            { id: 30, chapter: "Chapter 14 (Mortgages)", difficulty: 3, question: "Given a $2,000 cost for 2 discount points and a monthly saving of $34.55: How long do you have to keep this house (and 7.5% mortgage) to break-even for paying 2 discount points?", options: ["A) 2.50 years", "B) 10.00 years", "C) 5.82 years", "D) 4.82 years"], correctAnswer: "D) 4.82 years" },
+            
+            // Chapter 15 - From Week9.txt
+            { id: 31, chapter: "Chapter 15", difficulty: 1, question: "A spot transaction in the foreign exchange market involves the", options: ["A) exchange of exports and imports at a specified future date.", "B) exchange of bank deposits at a specified future date.", "C) immediate (within two days) exchange of exports and imports.", "D) immediate (within two days) exchange of bank deposits."], correctAnswer: "D) immediate (within two days) exchange of bank deposits." },
+            { id: 32, chapter: "Chapter 15", difficulty: 1, question: "Forward exchange rates", options: ["A) involve the immediate exchange of bank deposits.", "B) involve the exchange of bank deposits at some specified future date.", "C) involve the immediate exchange of imports and exports.", "D) none of the above."], correctAnswer: "B) involve the exchange of bank deposits at some specified future date." },
+            { id: 33, chapter: "Chapter 15", difficulty: 2, question: "When the exchange rate changes from 1.0 euros to the dollar to 0.8 euros to the dollar, the euro has ________ and the dollar has ________.", options: ["A) appreciated; appreciated", "B) depreciated; appreciated", "C) appreciated; depreciated", "D) depreciated; depreciated"], correctAnswer: "C) appreciated; depreciated" },
+            { id: 34, chapter: "Chapter 15", difficulty: 2, question: "When the exchange rate changes from 1.0 euros to the dollar to 1.2 euros to the dollar, the euro has ________ and the dollar has ________.", options: ["A) appreciated; appreciated", "B) depreciated; appreciated", "C) appreciated; depreciated", "D) depreciated; depreciated"], correctAnswer: "B) depreciated; appreciated" },
+            { id: 35, chapter: "Chapter 15", difficulty: 3, question: "If the dollar appreciates from 0.8 euros per dollar to 1.2 euros per dollar, the euro depreciates from ________ dollars to ________ dollars per euro.", options: ["A) 1.25; 0.83", "B) 0.83; 1.25", "C) 0.67; 1.50", "D) 1.50; 0.67"], correctAnswer: "A) 1.25; 0.83" },
+            { id: 36, chapter: "Chapter 15", difficulty: 2, question: "If the dollar depreciates relative to the Swiss franc,", options: ["A) Swiss chocolate will become more expensive in the United States.", "B) American computers will become less expensive in Switzerland.", "C) Swiss chocolate will become cheaper in the United States.", "D) both A and B of the above will happen."], correctAnswer: "B) American computers will become less expensive in Switzerland." },
+            { id: 37, chapter: "Chapter 15", difficulty: 2, question: "The foreign exchange market", options: ["A) is organized as an over-the-counter market in which several hundred dealers stand ready to buy and sell deposits denominated in foreign currencies.", "B) is very competitive.", "C) functions no differently from a centralized market.", "D) all of the above."], correctAnswer: "D) all of the above." },
+            { id: 38, chapter: "Chapter 15", difficulty: 1, question: "Trades in the foreign exchange market consist of transactions in excess of", options: ["A) $500,000.", "B) $1 million.", "C) $5 million.", "D) $10 million."], correctAnswer: "B) $1 million." },
+            { id: 39, chapter: "Chapter 15", difficulty: 1, question: "If a U.S. traveler needs foreign currency for a trip abroad, she would buy the currency in the ________ market from a dealer such as American Express.", options: ["A) dollar", "B) foreign exchange", "C) retail", "D) bankers"], correctAnswer: "C) retail" },
+            { id: 40, chapter: "Chapter 15", difficulty: 1, question: "The daily volume in the foreign exchange market is typically", options: ["A) over $5 trillion.", "B) about $500 billion.", "C) over $10 trillion.", "D) approximately $2 billion"], correctAnswer: "A) over $5 trillion." },
+            { id: 41, chapter: "Chapter 15", difficulty: 2, question: "The purchasing power parity theory", options: ["A) has significant predictive power in the short run.", "B) is the starting point for understanding how exchange rates are determined.", "C) does not take into account that many goods and services are not traded across borders.", "D) is none of the above."], correctAnswer: "C) does not take into account that many goods and services are not traded across borders." },
+            { id: 42, chapter: "Chapter 15", difficulty: 2, question: "In the long run, ________ affect the exchange rate.", options: ["A) relative price levels", "B) tariffs and quotas", "C) productivity", "D) all of the above."], correctAnswer: "D) all of the above." },
+            { id: 43, chapter: "Chapter 15", difficulty: 1, question: "The starting point for understanding how exchange rates are determined is a simple idea called ________, which states that if two countries produce an identical good, the price of the good should be the same throughout the world no matter which country produces it.", options: ["A) Gresham's law", "B) the law of one price", "C) purchasing power parity", "D) arbitrage"], correctAnswer: "B) the law of one price" },
+            { id: 44, chapter: "Chapter 15", difficulty: 3, question: "In the long run, a rise in a country's price level (relative to the foreign price level) causes its currency to ________, while a rise in the country's relative productivity causes its currency to ________.", options: ["A) appreciate; appreciate", "B) appreciate; depreciate", "C) depreciate; appreciate", "D) depreciate; depreciate"], correctAnswer: "C) depreciate; appreciate" },
+            { id: 45, chapter: "Chapter 15", difficulty: 2, question: "The theory of purchasing power parity cannot fully explain exchange rate movements because", options: ["A) all goods are identical even if produced in different countries.", "B) monetary policy differs across countries.", "C) some goods are not traded between countries.", "D) fiscal policy differs across countries."], correctAnswer: "C) some goods are not traded between countries." },
+            { id: 46, chapter: "Chapter 15", difficulty: 2, question: "An increase in which factor will cause domestic currency depreciation?", options: ["A) trade barriers", "B) export demand", "C) import demand", "D) relative productivity"], correctAnswer: "C) import demand" },
+            { id: 47, chapter: "Chapter 15", difficulty: 2, question: "Increased demand for a country's ________ causes its currency to appreciate in the long run, while increased demand for ________ causes its currency to depreciate.", options: ["A) imports; imports", "B) imports; exports", "C) exports; imports", "D) exports; exports"], correctAnswer: "C) exports; imports" },
+            { id: 48, chapter: "Chapter 15", difficulty: 2, question: "If the demand for ________ goods decreases relative to ________ goods, the domestic currency will depreciate.", options: ["A) foreign; domestic", "B) foreign; foreign", "C) domestic; domestic", "D) domestic; foreign"], correctAnswer: "D) domestic; foreign" },
+            { id: 49, chapter: "Chapter 15", difficulty: 2, question: "As the relative expected return on dollar deposits increases, foreigners will want to hold more ________ deposits and less ________ deposits.", options: ["A) foreign; foreign", "B) foreign; dollar", "C) dollar; foreign", "D) dollar; dollar"], correctAnswer: "C) dollar; foreign" },
+            { id: 50, chapter: "Chapter 15", difficulty: 2, question: "When Americans and foreigners expect the return on dollar deposits to be high relative to the return on foreign deposits, there is a ________ demand for dollar deposits and a correspondingly ________ demand for foreign deposits.", options: ["A) higher; higher", "B) higher; lower", "C) lower; higher", "D) lower; lower"], correctAnswer: "B) higher; lower" },
+            { id: 51, chapter: "Chapter 15", difficulty: 1, question: "Quotas", options: ["A) are restrictions placed on the quality of foreign goods that can be imported.", "B) are fees placed on imported goods.", "C) are restrictions placed on the quantity of foreign goods that can be exported.", "D) are none of the above."], correctAnswer: "D) are none of the above." },
+            { id: 52, chapter: "Chapter 15", difficulty: 2, question: "With the start of the subprime financial crisis in August 2007, the dollar ________ in value against the euro as the Fed lowered interest rates. By December of 2008, with the financial crisis spreading throughout Europe, foreign central banks cut their interest rates, leading to a ________ in the value of the dollar relative to the euro.", options: ["A) rose; further increase", "B) rose; decline", "C) declined; rise", "D) declined; further decline"], correctAnswer: "C) declined; rise" },
+            { id: 53, chapter: "Chapter 15", difficulty: 3, question: "Which of the following causes a depreciation of the domestic currency?", options: ["A) A lower domestic interest rate due to a lower expected inflation rate.", "B) A decline in the domestic real interest rate.", "C) A decrease in the domestic money supply.", "D) All of the above."], correctAnswer: "B) A decline in the domestic real interest rate." },
+            { id: 54, chapter: "Chapter 15", difficulty: 3, question: "Which of the following causes an appreciation of the domestic currency?", options: ["A) A lower domestic interest rate due to a lower expected inflation rate.", "B) A decline in the domestic real interest rate.", "C) An increase in the domestic money supply.", "D) All of the above."], correctAnswer: "A) A lower domestic interest rate due to a lower expected inflation rate." },
+            { id: 55, chapter: "Chapter 15", difficulty: 2, question: "Higher tariffs and quotas cause a country's currency to ________ in the ________ run.", options: ["A) depreciate; short", "B) appreciate; short", "C) depreciate; long", "D) appreciate; long"], correctAnswer: "D) appreciate; long" },
+            { id: 56, chapter: "Chapter 15", difficulty: 3, question: "If the inflation rate in the United States is higher than that in Germany and productivity is growing at a slower rate in the United States than it is in Germany, in the long run,", options: ["A) the euro should appreciate relative to the dollar.", "B) the euro should depreciate relative to the dollar.", "C) there should be no change in the euro price of dollars.", "D) it is not clear what will happen to the euro price of dollars."], correctAnswer: "A) the euro should appreciate relative to the dollar." },
+            { id: 57, chapter: "Chapter 15", difficulty: 3, question: "If the French demand for American exports rises at the same time that U.S. productivity rises relative to French productivity, then, in the long run,", options: ["A) the euro should appreciate relative to the dollar.", "B) the dollar should depreciate relative to the euro.", "C) the dollar should appreciate relative to the euro.", "D) it is not clear whether the euro should appreciate or depreciate relative to the dollar."], correctAnswer: "C) the dollar should appreciate relative to the euro." },
+
+            // Chapter 11 - From HW6.txt
+            { id: 58, chapter: "Chapter 11", difficulty: 1, question: "Money market instruments", options: ["A) are usually sold in large denominations.", "B) have low default risk.", "C) mature in one year or less.", "D) are characterized by all of the above.", "E) are characterized by only A and B of the above."], correctAnswer: "D) are characterized by all of the above." },
+            { id: 59, chapter: "Chapter 11", difficulty: 2, question: "The banking industry", options: ["A) should have an efficiency advantage in gathering information that would eliminate the need for the money markets.", "B) exists primarily to mediate the asymmetric information problem between saver-lenders and borrower-spenders.", "C) is subject to more regulations and governmental costs than the money markets.", "D) all of the above are true.", "E) only A and B of the above are true."], correctAnswer: "D) all of the above are true." },
+            { id: 60, chapter: "Chapter 11", difficulty: 1, question: "Most individual investors do not participate directly in the money market due to", options: ["A) prohibitions against individual investors trading too frequently.", "B) limited access to this market.", "C) the large size of the transactions.", "D) the small physical locations used to trade money market securities."], correctAnswer: "C) the large size of the transactions." },
+            { id: 61, chapter: "Chapter 11", difficulty: 1, question: "Which of the following money market instruments has the lowest rate?", options: ["A) The prime rate", "B) Eurodollars", "C) 4-week Treasury bills", "D) 1-month CDs"], correctAnswer: "C) 4-week Treasury bills" },
+            { id: 62, chapter: "Chapter 11", difficulty: 1, question: "The sellers of money market securities provide these securities", options: ["A) to obtain long-term financing for major projects.", "B) because it is a low-cost source of temporary funds.", "C) they need somewhere to deposit short-term funds.", "D) because buyers quickly bid the prices higher."], correctAnswer: "B) because it is a low-cost source of temporary funds." },
+            { id: 63, chapter: "Chapter 11", difficulty: 2, question: "Which of the following are true statements about participants in the money markets?", options: ["A) Large banks participate in the money markets by selling large negotiable CDs.", "B) The U.S. government and corporations borrow in the money markets because cash inflows and outflows are rarely synchronized.", "C) The Federal Reserve is the single most influential participant in the U.S. money market.", "D) All of the above are true.", "E) Only A and B of the above are true."], correctAnswer: "D) All of the above are true." },
+            { id: 64, chapter: "Chapter 11", difficulty: 1, question: "The most influential participant(s) in the U.S. money market", options: ["A) is the Federal Reserve.", "B) is the U.S. Treasury Department.", "C) are the large money center banks.", "D) are the investment banks that underwrite securities."], correctAnswer: "A) is the Federal Reserve." },
+            { id: 65, chapter: "Chapter 11", difficulty: 1, question: "What is the primary role of individuals as participants in the money market?", options: ["A) Individuals do not participate in the money market.", "B) Many individuals issue money market instruments to lend excess cash.", "C) Individuals often use money market instruments to finance home and auto purchases.", "D) Individuals purchase money market instruments via money market mutual funds."], correctAnswer: "D) Individuals purchase money market instruments via money market mutual funds." },
+            { id: 66, chapter: "Chapter 11", difficulty: 1, question: "Commercial banks are large holders of ________ and are the major issuer of ________.", options: ["A) negotiable certificates of deposit; U.S. government securities", "B) U.S. government securities; negotiable certificates of deposit", "C) commercial paper; Eurodollars", "D) Eurodollars; commercial paper"], correctAnswer: "B) U.S. government securities; negotiable certificates of deposit" },
+            { id: 67, chapter: "Chapter 11", difficulty: 1, question: "Finance companies raise funds in the money market by selling", options: ["A) commercial paper.", "B) federal funds.", "C) negotiable certificates of deposit.", "D) Eurodollars."], correctAnswer: "A) commercial paper." },
+            { id: 68, chapter: "Chapter 11", difficulty: 1, question: "When inflation rose in the late 1970s,", options: ["A) consumers moved money out of money market mutual funds because their returns did not keep pace with inflation.", "B) banks solidified their advantage over money markets by offering higher deposit rates.", "C) brokerage houses introduced highly popular money market mutual funds, which drew significant amounts of money out of bank deposits.", "D) consumers were unable to take advantage of higher rates in money markets because of the requirement of large transaction sizes."], correctAnswer: "C) brokerage houses introduced highly popular money market mutual funds, which drew significant amounts of money out of bank deposits." },
+            { id: 69, chapter: "Chapter 11", difficulty: 1, question: "Which of the following is the largest borrower in the money markets?", options: ["A) Commercial banks", "B) Large corporations", "C) The U.S. Treasury", "D) U.S. firms engaged in foreign trade"], correctAnswer: "C) The U.S. Treasury" },
+            { id: 70, chapter: "Chapter 11", difficulty: 1, question: "Money market instruments issued by the U.S. Treasury are called", options: ["A) Treasury bills.", "B) Treasury notes.", "C) Treasury bonds.", "D) Treasury strips."], correctAnswer: "A) Treasury bills." },
+            { id: 71, chapter: "Chapter 11", difficulty: 3, question: "Suppose that you purchase a 91-day Treasury bill for $9,850 that is worth $10,000 when it matures. The security's annualized yield if held to maturity is about", options: ["A) 4 percent.", "B) 5 percent.", "C) 6 percent.", "D) 7 percent."], correctAnswer: "D) 7 percent." },
+            { id: 72, chapter: "Chapter 11", difficulty: 3, question: "Suppose that you purchase a 182-day Treasury bill for $9,850 that is worth $10,000 when it matures. The security's annualized yield if held to maturity is about", options: ["A) 1.5%.", "B) 2%.", "C) 3%.", "D) 6%."], correctAnswer: "C) 3%." },
+            { id: 73, chapter: "Chapter 11", difficulty: 1, question: "The market for Treasury bills is", options: ["A) deep.", "B) liquid.", "C) A and B are correct.", "D) None of the above is correct."], correctAnswer: "C) A and B are correct." },
+            { id: 74, chapter: "Chapter 11", difficulty: 2, question: "If your noncompetitive bid for a Treasury bill is successful, then you will", options: ["A) certainly pay less than if you had submitted a competitive bid.", "B) certainly pay more than if you had submitted a competitive bid.", "C) pay the average of prices offered in other noncompetitive bids.", "D) pay the same as other successful noncompetitive bidders."], correctAnswer: "D) pay the same as other successful noncompetitive bidders." },
+            { id: 75, chapter: "Chapter 11", difficulty: 2, question: "If the Fed wants to lower the federal funds interest rate, it will ________ the banking system by ________ securities.", options: ["A) add reserves to; selling", "B) add reserves to; buying", "C) remove reserves from; selling", "D) remove reserves from; buying"], correctAnswer: "B) add reserves to; buying" },
+            { id: 76, chapter: "Chapter 11", difficulty: 2, question: "Repos are", options: ["A) usually low-risk loans.", "B) usually collateralized with Treasury securities.", "C) low interest rate loans.", "D) all of the above.", "E) only A and B of the above."], correctAnswer: "E) only A and B of the above." },
+            { id: 77, chapter: "Chapter 11", difficulty: 2, question: "Commercial paper securities", options: ["A) are issued only by the largest and most creditworthy corporations, as they are unsecured.", "B) carry an interest rate that varies according to the firm's level of risk.", "C) never have a term to maturity that exceeds 270 days.", "D) all of the above.", "E) only A and B of the above."], correctAnswer: "D) all of the above." },
+            { id: 78, chapter: "Chapter 11", difficulty: 2, question: "Banker's acceptances", options: ["A) can be bought and sold until they mature.", "B) are issued only by large money center banks.", "C) carry low interest rates because of the very low default risk.", "D) are all of the above.", "E) are only A and B of the above."], correctAnswer: "D) are all of the above." },
+            { id: 79, chapter: "Chapter 11", difficulty: 1, question: "Asset-backed commercial paper differs from conventional commercial paper in that", options: ["A) it is backed (secured) by some bundle of assets.", "B) its maturity usually extends well beyond 1 year.", "C) both A and B of the above.", "D) neither A nor B of the above."], correctAnswer: "A) it is backed (secured) by some bundle of assets." },
+            { id: 80, chapter: "Chapter 11", difficulty: 1, question: "Banker’s acceptances are primarily used to facilitate", options: ["A) secondary market transactions.", "B) vehicle financing.", "C) underground payments.", "D) international trade."], correctAnswer: "D) international trade." },
+            { id: 81, chapter: "Chapter 11", difficulty: 1, question: "Which of the following money market securities does not have a secondary market?", options: ["A) T-bills", "B) Federal funds", "C) Commercial paper", "D) Banker’s acceptances"], correctAnswer: "B) Federal funds" },
+            { id: 82, chapter: "Chapter 11", difficulty: 1, question: "The usual maturity range for commercial paper is", options: ["A) 1 to 270 days.", "B) 1 to 15 days.", "C) 4, 13, and 26 weeks.", "D) 1 to 7 days."], correctAnswer: "A) 1 to 270 days." },
+
+            // Chapter 12 - From HW6.txt
+            { id: 83, chapter: "Chapter 12", difficulty: 1, question: "Compared to money market securities, capital market securities have", options: ["A) more liquidity.", "B) longer maturities.", "C) lower yields.", "D) less risk."], correctAnswer: "B) longer maturities." },
+            { id: 84, chapter: "Chapter 12", difficulty: 1, question: "(I) Securities that have an original maturity greater than one year are traded in capital markets. (II) The best known capital market securities are stocks and bonds.", options: ["A) (I) is true, (II) false.", "B) (I) is false, (II) true.", "C) Both (I) and (II) are true.", "D) Both (I) and (II) are false."], correctAnswer: "C) Both (I) and (II) are true." },
+            { id: 85, chapter: "Chapter 12", difficulty: 1, question: "(I) Firms and individuals use the capital markets for long-term investments. (II) Capital markets provide an alternative to investment in assets such as real estate and gold.", options: ["A) (I) is true, (II) false.", "B) (I) is false, (II) true.", "C) Both (I) and (II) are true.", "D) Both (I) and (II) are false."], correctAnswer: "C) Both (I) and (II) are true." },
+            { id: 86, chapter: "Chapter 12", difficulty: 1, question: "The primary issuers of capital market securities include", options: ["A) the federal and local governments.", "B) the federal and local governments, and corporations.", "C) the federal and local governments, corporations, and financial institutions.", "D) local governments and corporations."], correctAnswer: "B) the federal and local governments, and corporations." },
+            { id: 87, chapter: "Chapter 12", difficulty: 1, question: "The distribution of a firm's capital between debt and equity is its", options: ["A) current ratio.", "B) liability structure.", "C) acid ratio.", "D) capital structure."], correctAnswer: "D) capital structure." },
+            { id: 88, chapter: "Chapter 12", difficulty: 1, question: "Well-functioning capital markets are", options: ["A) crucial to continued health of the business sector.", "B) typically only found in the U.S.", "C) challenging to maintain and require frequent intervention.", "D) the primary goal of the Federal Reserve."], correctAnswer: "A) crucial to continued health of the business sector." },
+            { id: 89, chapter: "Chapter 12", difficulty: 1, question: "When a publicly traded firm issues new stock or bonds it is a(n)", options: ["A) secondary market transaction.", "B) primary market transaction.", "C) initial public offering (IPO).", "D) OTC exchange."], correctAnswer: "B) primary market transaction." },
+            { id: 90, chapter: "Chapter 12", difficulty: 1, question: "The ________ value of a bond is the amount that the issuer must pay at maturity.", options: ["A) market", "B) present", "C) discounted", "D) face"], correctAnswer: "D) face" },
+            { id: 91, chapter: "Chapter 12", difficulty: 2, question: "How much annual interest will a firm pay on an 8% coupon rate $1,000 face value bond that has a yield to maturity of 9.5%? Assume the bond pays interest semiannually.", options: ["A) $40", "B) $90", "C) $95", "D) $80"], correctAnswer: "D) $80" },
+            { id: 92, chapter: "Chapter 12", difficulty: 2, question: "Most of the time, the interest rate on Treasury notes and bonds is ________ that on money market securities because of ________ risk.", options: ["A) above; interest-rate", "B) above; default", "C) below; interest-rate", "D) below; default"], correctAnswer: "A) above; interest-rate" },
+            { id: 93, chapter: "Chapter 12", difficulty: 1, question: "The bond contract that states the lender's rights and privileges and the borrower's obligations is called the", options: ["A) bond syndicate.", "B) restrictive covenant.", "C) bond covenant.", "D) bond indenture."], correctAnswer: "D) bond indenture." },
+            { id: 94, chapter: "Chapter 12", difficulty: 2, question: "Restrictive covenants can", options: ["A) limit the amount of dividends the firm can pay.", "B) limit the ability of the firm to issue additional debt.", "C) restrict the ability of the firm to enter into a merger agreement.", "D) do all of the above.", "E) do only A and B of the above."], correctAnswer: "D) do all of the above." },
+            { id: 95, chapter: "Chapter 12", difficulty: 2, question: "Call provisions will be exercised when interest rates ________ and bond values ________.", options: ["A) rise; rise", "B) fall; rise", "C) rise; fall", "D) fall; fall"], correctAnswer: "B) fall; rise" },
+            { id: 96, chapter: "Chapter 12", difficulty: 1, question: "Long-term unsecured bonds that are backed only by the general creditworthiness of the issuer are called", options: ["A) junk bonds.", "B) callable bonds.", "C) convertible bonds.", "D) debentures."], correctAnswer: "D) debentures." },
+            { id: 97, chapter: "Chapter 12", difficulty: 1, question: "A secured bond is backed by", options: ["A) the general creditworthiness of the borrower.", "B) an insurance company's financial guarantee.", "C) the expected future earnings of the borrower.", "D) specific collateral."], correctAnswer: "D) specific collateral." },
+            { id: 98, chapter: "Chapter 12", difficulty: 2, question: "Financial guarantees", options: ["A) are insurance policies to back bond issues.", "B) are purchased by financially weaker security issuers.", "C) lower the risk of the bonds covered by the guarantee.", "D) do all of the above.", "E) do only A and B of the above."], correctAnswer: "D) do all of the above." },
+            { id: 99, chapter: "Chapter 12", difficulty: 1, question: "In its simplest form, a credit default swap provides", options: ["A) insurance against default in the principle and interest payments of a credit instrument.", "B) an alternative method for bond issuers to pay principle and interest payments via a swap.", "C) bond investors with a method to swap interest payments for principle payments during a 'credit event.'", "D) the government with a guarantee that certain bond issues will not run into credit problems."], correctAnswer: "A) insurance against default in the principle and interest payments of a credit instrument." },
+            { id: 100, chapter: "Chapter 12", difficulty: 1, question: "Which of the following are true for the current yield?", options: ["A) The current yield is defined as the yearly coupon payment divided by the price of the security.", "B) The formula for the current yield is identical to the formula describing the yield to maturity for a discount bond.", "C) The current yield is always a poor approximation for the yield to maturity.", "D) All of the above are true.", "E) Only A and B of the above are true."], correctAnswer: "A) The current yield is defined as the yearly coupon payment divided by the price of the security." },
+            { id: 101, chapter: "Chapter 12", difficulty: 3, question: "The current yield on a $6,000, 10 percent coupon bond selling for $5,000 is", options: ["A) 5%.", "B) 10%.", "C) 12%.", "D) 15%."], correctAnswer: "C) 12%." },
+            { id: 102, chapter: "Chapter 12", difficulty: 1, question: "The face amount of a bond is also called the", options: ["A) coupon value.", "B) par value.", "C) perpetual value.", "D) maturation value."], correctAnswer: "B) par value." },
+
+            // Chapter 13 - From HW8.txt
+            { id: 103, chapter: "Chapter 13", difficulty: 1, question: "(I) A share of common stock in a firm represents an ownership interest in that firm. (II) A share of preferred stock is as much like a bond as it is like common stock.", options: ["A) (I) is true, (II) false.", "B) (I) is false, (II) true.", "C) Both (I) and ((II) are true.", "D) Both (I) and ((II) are false."], correctAnswer: "C) Both (I) and ((II) are true." },
+            { id: 104, chapter: "Chapter 13", difficulty: 1, question: "Preferred stockholders hold a claim on assets that has priority over the claims of", options: ["A) both common stockholders and bondholders.", "B) neither common stockholders nor bondholders.", "C) common stockholders, but after that of bondholders.", "D) bondholders, but after that of common stockholders."], correctAnswer: "C) common stockholders, but after that of bondholders." },
+            { id: 105, chapter: "Chapter 13", difficulty: 1, question: "(I) Firms issue common stock in far greater amounts than preferred stock. (II) In a given year, the total volume of stock issued is much less than the volume of bonds issued.", options: ["A) (I) is true, (II) false.", "B) (I) is false, (II) true.", "C) Both are true.", "D) Both are false."], correctAnswer: "C) Both are true." },
+            { id: 106, chapter: "Chapter 13", difficulty: 1, question: "The riskiest capital market security is", options: ["A) preferred stock.", "B) common stock.", "C) corporate bonds.", "D) Treasury bonds."], correctAnswer: "B) common stock." },
+            { id: 107, chapter: "Chapter 13", difficulty: 1, question: "To list on the NYSE, a firm must", options: ["A) have earnings of at least $10 million per year.", "B) have at least $500 million in outstanding debt.", "C) have a total of $100 million in market value.", "D) meet all of the above requirements.", "E) meet A and C of the above requirements."], correctAnswer: "E) meet A and C of the above requirements." },
+            { id: 108, chapter: "Chapter 13", difficulty: 1, question: "Which of the following statements about trading operations in an organized exchange is correct?", options: ["A) Floor traders all deal in a wide variety of stocks.", "B) In most trades, specialists match buy and sell orders.", "C) In most trades, specialists buy for or sell from their own inventories.", "D) The ETF system is used to expedite large trades of over 100,000 shares."], correctAnswer: "B) In most trades, specialists match buy and sell orders." },
+            { id: 109, chapter: "Chapter 13", difficulty: 1, question: "In 2022, the NYSE traded ________ shares on an average trading day.", options: ["A) 4 billion", "B) 7 billion", "C) 10 billion", "D) 12 billion"], correctAnswer: "C) 10 billion" },
+            { id: 110, chapter: "Chapter 13", difficulty: 2, question: "Exchange traded funds (ETFs) have which of the following features?", options: ["A) They are listed and traded as individual stocks on a stock exchange.", "B) They are indexed rather than actively managed.", "C) Their value is based on the underlying net asset value of the stocks held in the index basket.", "D) All of the above."], correctAnswer: "D) All of the above." },
+            { id: 111, chapter: "Chapter 13", difficulty: 1, question: "The NASDAQ provides current bid and ask prices on approximately _________different securities.", options: ["A) 2,500", "B) 3,300", "C) 5,200", "D) 6,100"], correctAnswer: "D) 6,100" },
+            { id: 112, chapter: "Chapter 13", difficulty: 1, question: "A basic principle of finance is that the value of any investment is", options: ["A) the present value of all future net cash flows generated by the investment.", "B) the undiscounted sum of all future net cash flows generated by the investment.", "C) unrelated to the future net cash flows generated by the investment.", "D) unrelated to the degree of risk associated with the future net cash flows generated by the investment."], correctAnswer: "A) the present value of all future net cash flows generated by the investment." },
+            { id: 113, chapter: "Chapter 13", difficulty: 2, question: "A high price earnings ratio (PE) gives what interpretation?", options: ["A) The market expects earnings to fall in the future.", "B) The market feels the firm's earnings are very high risk and are willing to pay a premium for them.", "C) The market expects the earnings to rise in the future.", "D) The firm is not paying a dividend."], correctAnswer: "C) The market expects the earnings to rise in the future." },
+            { id: 114, chapter: "Chapter 13", difficulty: 3, question: "A stock currently sells for $30 per share and pays $1.00 per year in dividends. What is an investor's valuation of this stock if he expects it to be selling for $37 in one year and requires a 12 percent return on equity investments?", options: ["A) $38", "B) $33.50", "C) $34.50", "D) $33.93"], correctAnswer: "D) $33.93" },
+            { id: 115, chapter: "Chapter 13", difficulty: 3, question: "According to the Gordon growth model, what is an investor's valuation of a stock whose current dividend is $1.00 per year if dividends are expected to grow at a constant rate of 10 percent over a long period of time and the investor's required return is 15 percent?", options: ["A) $20", "B) $11", "C) $22", "D) $7.33", "E) $4.40"], correctAnswer: "A) $20" },
+            { id: 116, chapter: "Chapter 13", difficulty: 3, question: "A stock currently sells for $25 per share and pays $0.24 per year in dividends. What is an investor's valuation of this stock if she expects it to be selling for $30 in one year and requires a 15 percent return on equity investments?", options: ["A) $30.24", "B) $26.30", "C) $26.09", "D) $27.74"], correctAnswer: "C) $26.09" },
+            { id: 117, chapter: "Chapter 13", difficulty: 2, question: "Holding other things constant, a stock's value will be highest if its dividend growth rate is", options: ["A) 15%.", "B) 10%.", "C) 5%.", "D) 2%."], correctAnswer: "A) 15%." },
+            { id: 118, chapter: "Chapter 13", difficulty: 2, question: "Holding other things constant, a stock's value will be highest if the investor's required return on investments in equity is", options: ["A) 20%.", "B) 15%.", "C) 10%.", "D) 5%."], correctAnswer: "D) 5%." },
+            { id: 119, chapter: "Chapter 13", difficulty: 2, question: "Suppose the average industry PE ratio for auto parts retailers is 20. What is the current price of Auto Zone stock if the retailer's earnings per share is projected to be $1.85?", options: ["A) $21.85", "B) $37", "C) $10.81", "D) $9.25"], correctAnswer: "B) $37" },
+            { id: 120, chapter: "Chapter 13", difficulty: 1, question: "The PE ratio approach to valuing stock is especially useful for valuing", options: ["A) privately held firms.", "B) firms that don't pay dividends.", "C) both A and B of the above.", "D) neither A nor B of the above."], correctAnswer: "C) both A and B of the above." },
+            { id: 121, chapter: "Chapter 13", difficulty: 3, question: "What is the value of a common stock that is expected to pay a $4 dividend next year and will grow at 5% every year thereafter if your required return is 14%? Use the Gordon growth model to compute the answer.", options: ["A) $44.44", "B) $54.34", "C) $28.75", "D) $63.87"], correctAnswer: "A) $44.44" },
+            { id: 122, chapter: "Chapter 13", difficulty: 1, question: "The most commonly quoted index is the Dow Jones Industrial Average (DJIA), an index based on the performance of the stocks of ________ large companies.", options: ["A) 25", "B) 30", "C) 35", "D) 40"], correctAnswer: "B) 30" },
+            { id: 123, chapter: "Chapter 13", difficulty: 1, question: "The primary mission of the SEC. is to", options: ["A) monitor investor compliance.", "B) assess fines on firms that sell in inefficient markets.", "C) ensure that market indexes are computed correctly.", "D) protect investors and maintain the integrity of the markets."], correctAnswer: "D) protect investors and maintain the integrity of the markets." },
+            { id: 124, chapter: "Chapter 13", difficulty: 1, question: "The SEC brings about _________civil enforcement actions each year against individuals and companies in order to ensure that investors receive reliable information.", options: ["A) 100", "B) 400 to 500", "C) 800 to 1,000", "D) 2,000 to 2,500"], correctAnswer: "C) 800 to 1,000" }
+        ];
+
+
+        // --- 2. APP STATE MANAGEMENT & INITIALIZATION ---
+        
+        let appState = {
+            view: 'home', // 'home', 'quiz', 'results', 'studySetup', 'studyMode'
+            mode: null, // 'test', 'quiz', or 'study'
+            currentQuestionIndex: 0,
+            currentQuestionList: [],
+            userAnswers: [],
+            feedbackMessage: null,
+            correctAnswer: null,
+            selectedOption: null,
+            isAnswered: false,
+            // Study Mode filters
+            studyFilters: {
+                chapters: ['Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14 (Mortgages)', 'Chapter 15'],
+                difficulties: [1, 2, 3]
+            },
+            // NEW: History of the last 10 quiz attempts (array of arrays of question IDs)
+            quizHistory: [],
+        };
+
+        const appContainer = document.getElementById('app');
+        const HISTORY_KEY = 'fin218_quiz_history';
+        const MAX_HISTORY_ATTEMPTS = 10;
+
+        /**
+         * Loads quiz history from localStorage on startup.
+         */
+        function initializeAppState() {
+            const historyString = localStorage.getItem(HISTORY_KEY);
+            try {
+                const loadedHistory = historyString ? JSON.parse(historyString) : [];
+                // Ensure loaded data is an array before assigning
+                appState.quizHistory = Array.isArray(loadedHistory) ? loadedHistory : [];
+            } catch (e) {
+                console.error("Error loading quiz history from localStorage:", e);
+                appState.quizHistory = [];
+            }
+        }
+        
+        /**
+         * Saves the current quiz IDs to history and prunes the list to MAX_HISTORY_ATTEMPTS.
+         */
+        function saveQuizHistory() {
+            const currentQuizIds = appState.currentQuestionList.map(q => q.id);
+            
+            // Add the new quiz to the history
+            appState.quizHistory.push(currentQuizIds);
+            
+            // Trim the history to the last 10 attempts
+            if (appState.quizHistory.length > MAX_HISTORY_ATTEMPTS) {
+                appState.quizHistory = appState.quizHistory.slice(-MAX_HISTORY_ATTEMPTS);
+            }
+            
+            // Save back to localStorage
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(appState.quizHistory));
+            } catch (e) {
+                console.error("Error saving quiz history to localStorage:", e);
+            }
+        }
+
+
+        // --- 3. HELPER FUNCTIONS ---
+
+        // Utility to shuffle an array (used for Quiz Mode)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- 4. CORE LOGIC (Test/Quiz Modes) ---
+
+        function startMode(mode) {
+            appState.mode = mode;
+            appState.userAnswers = [];
+            appState.currentQuestionIndex = 0;
+            appState.feedbackMessage = null;
+            appState.correctAnswer = null;
+            appState.selectedOption = null;
+            appState.isAnswered = false;
+
+            if (mode === 'test') {
+                appState.currentQuestionList = [...questionsData];
+                shuffleArray(appState.currentQuestionList);
+            } else if (mode === 'quiz') {
+                const QUIZ_SIZE = 10;
+                
+                // 1. Consolidate all IDs from the last N attempts (up to 10)
+                // flat() merges all nested arrays (each quiz attempt) into a single array of IDs
+                const recentlyUsedIds = appState.quizHistory.flat(); 
+                
+                // 2. Separate questions into 'unseen' (not in consolidated history) and 'seen'
+                const unseenQuestions = questionsData.filter(q => !recentlyUsedIds.includes(q.id));
+                const seenQuestions = questionsData.filter(q => recentlyUsedIds.includes(q.id));
+
+                // 3. Shuffle both pools
+                shuffleArray(unseenQuestions);
+                shuffleArray(seenQuestions);
+
+                // 4. Prioritize 'unseen' questions
+                let selectedQuestions = [];
+                
+                // Take as many 'unseen' questions as available, up to QUIZ_SIZE
+                const unseenToTake = Math.min(unseenQuestions.length, QUIZ_SIZE);
+                selectedQuestions.push(...unseenQuestions.slice(0, unseenToTake));
+
+                // 5. Fill remaining slots with 'seen' questions if necessary
+                const remainingSlots = QUIZ_SIZE - selectedQuestions.length;
+                if (remainingSlots > 0) {
+                    selectedQuestions.push(...seenQuestions.slice(0, remainingSlots));
+                }
+
+                // 6. Final check and shuffle
+                shuffleArray(selectedQuestions);
+                appState.currentQuestionList = selectedQuestions;
+
+            }
+
+            appState.view = 'quiz'; // Reusing the quiz view for test/quiz mode
+            render();
+        }
+
+        function checkAnswer(selectedOption) {
+            if (appState.isAnswered) return; // Prevent double answering
+
+            const currentQ = appState.currentQuestionList[appState.currentQuestionIndex];
+            const isCorrect = (selectedOption === currentQ.correctAnswer);
+
+            appState.selectedOption = selectedOption;
+            appState.correctAnswer = currentQ.correctAnswer;
+            appState.isAnswered = true;
+
+            if (isCorrect) {
+                appState.feedbackMessage = "Correct!";
+            } else {
+                appState.feedbackMessage = "Incorrect. The correct answer is:";
+            }
+
+            // Record the answer for final grading
+            appState.userAnswers.push({
+                questionId: currentQ.id,
+                userAnswer: selectedOption,
+                correct: isCorrect
+            });
+
+            render();
+        }
+
+        function nextQuestion() {
+            if (!appState.isAnswered) {
+                return;
+            }
+
+            appState.currentQuestionIndex++;
+            appState.feedbackMessage = null;
+            appState.correctAnswer = null;
+            appState.selectedOption = null;
+            appState.isAnswered = false;
+
+            if (appState.currentQuestionIndex >= appState.currentQuestionList.length) {
+                // Save quiz history before showing results (only for 'quiz' mode)
+                if (appState.mode === 'quiz') {
+                    saveQuizHistory();
+                }
+                appState.view = 'results';
+            }
+            render();
+        }
+
+        // --- 5. CORE LOGIC (Study Mode) ---
+
+        function startStudySetup() {
+            appState.view = 'studySetup';
+            render();
+        }
+
+        function filterQuestions() {
+            const chapterInputs = document.querySelectorAll('input[name="chapter"]:checked');
+            const difficultyInputs = document.querySelectorAll('input[name="difficulty"]:checked');
+
+            const selectedChapters = Array.from(chapterInputs).map(input => input.value);
+            const selectedDifficulties = Array.from(difficultyInputs).map(input => parseInt(input.value));
+
+            if (selectedChapters.length === 0 || selectedDifficulties.length === 0) {
+                alert('Please select at least one Chapter and one Difficulty level.');
+                return;
+            }
+
+            appState.currentQuestionList = questionsData
+                .filter(q => selectedChapters.includes(q.chapter))
+                .filter(q => selectedDifficulties.includes(q.difficulty))
+                // Add the 'isRevealed' state for study mode
+                .map(q => ({ ...q, isRevealed: false }));
+
+            if (appState.currentQuestionList.length === 0) {
+                 alert('No questions match the selected filters. Please adjust your selections.');
+                 return;
+            }
+
+            appState.mode = 'study';
+            appState.view = 'studyMode';
+            render();
+        }
+
+        function toggleAnswer(questionId) {
+            const index = appState.currentQuestionList.findIndex(q => q.id === questionId);
+            if (index !== -1) {
+                // Toggle the 'isRevealed' property
+                appState.currentQuestionList[index].isRevealed = !appState.currentQuestionList[index].isRevealed;
+                render();
+            }
+        }
+
+        // --- 6. RENDER FUNCTIONS ---
+
+        function renderHome() {
+            const historyCount = appState.quizHistory.length;
+            const trackingMessage = historyCount === 0 
+                ? 'No history yet. Start quizzing!'
+                : `Tracking the last ${historyCount} attempt${historyCount !== 1 ? 's' : ''} to improve variety.`;
+
+            appContainer.innerHTML = `
+                <div class="text-center space-y-8">
+                    <h1 class="text-4xl font-extrabold text-blue-800">FIN 218 Exam Review</h1>
+                    <p class="text-lg text-gray-600">Chapters 11-15: Select a study mode to begin.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                        <div class="p-6 bg-blue-50 border-2 border-blue-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-blue-400">
+                            <h2 class="text-2xl font-bold text-blue-800">Test Mode</h2>
+                            <p class="text-gray-600 text-sm">Answer all <span class="font-bold text-blue-600">124 questions</span> with immediate feedback.</p>
+                            <button onclick="startMode('test')" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 shadow-md">
+                                Start Test Mode
+                            </button>
+                        </div>
+                        <div class="p-6 bg-indigo-50 border-2 border-indigo-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-indigo-400">
+                            <h2 class="text-2xl font-bold text-indigo-800">Quiz Mode</h2>
+                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 smart-selected questions</span> for a quick check.
+                                <span class="block mt-2 text-xs text-gray-500 font-medium">
+                                    ${trackingMessage}
+                                </span>
+                            </p>
+                            <button onclick="startMode('quiz')" class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
+                                Start Quiz Mode
+                            </button>
+                        </div>
+                        <div class="p-6 bg-green-50 border-2 border-green-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-green-400">
+                            <h2 class="text-2xl font-bold text-green-800">Study Mode</h2>
+                            <p class="text-gray-600 text-sm">Filter by chapter/difficulty. Answers are hidden until revealed.</p>
+                            <button onclick="startStudySetup()" class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
+                                Set Up Study
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuiz() {
+            const currentQ = appState.currentQuestionList[appState.currentQuestionIndex];
+            if (!currentQ) {
+                appState.view = 'results';
+                render();
+                return;
+            }
+
+            const currentQNum = appState.currentQuestionIndex + 1;
+            const totalQ = appState.currentQuestionList.length;
+            const modeName = appState.mode === 'test' ? 'Test Mode (All 124)' : 'Quiz Mode (10 Questions)';
+
+            // Difficulty indicator colors
+            let difficultyColor = 'bg-green-500';
+            let difficultyText = 'Easy';
+            if (currentQ.difficulty === 2) {
+                difficultyColor = 'bg-yellow-500';
+                difficultyText = 'Medium';
+            } else if (currentQ.difficulty === 3) {
+                difficultyColor = 'bg-red-500';
+                difficultyText = 'Hard';
+            }
+
+            // Render options
+            const optionsHTML = currentQ.options.map(option => {
+                let classes = "w-full text-left py-3 px-4 rounded-lg border-2 cursor-pointer transition duration-150 ease-in-out font-medium ";
+                let clickHandler = `checkAnswer('${option.replace(/'/g, "\\'")}')`; // Handle quotes in option text
+
+                if (appState.isAnswered) {
+                    // Answer has been selected, show results
+                    clickHandler = ''; // Disable further clicks
+                    if (option === appState.correctAnswer) {
+                        // Correct answer
+                        classes += "bg-green-100 border-green-500 text-green-800 shadow-md";
+                    } else if (option === appState.selectedOption) {
+                        // User's wrong answer
+                        classes += "bg-red-100 border-red-500 text-red-800 shadow-md";
+                    } else {
+                        // Unselected wrong answer
+                        classes += "bg-white border-gray-200 text-gray-600 opacity-60";
+                    }
+                } else {
+                    // Not yet answered
+                    classes += "bg-white border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-400";
+                }
+
+                return `<button onclick="${clickHandler}" class="${classes}">${option}</button>`;
+            }).join('');
+
+            // Feedback Section
+            let feedbackHTML = '';
+            if (appState.isAnswered) {
+                const isCorrect = (appState.selectedOption === appState.correctAnswer);
+                let messageClasses = isCorrect ? 'bg-green-100 text-green-800 border-green-400' : 'bg-red-100 text-red-800 border-red-400';
+
+                feedbackHTML = `
+                    <div class="mt-6 p-4 rounded-lg border-l-4 ${messageClasses}">
+                        <p class="font-bold text-lg">${appState.feedbackMessage}</p>
+                        ${!isCorrect ? `<p class="mt-2 text-md">The correct answer was: <span class="font-semibold">${appState.correctAnswer}</span></p>` : ''}
+                    </div>
+                    <div class="mt-6">
+                        <button onclick="nextQuestion()" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 shadow-md">
+                            ${currentQNum < totalQ ? 'Next Question' : 'View Results'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            appContainer.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center pb-4 border-b">
+                        <h2 class="text-xl font-bold text-gray-700">${modeName}</h2>
+                        <div class="text-2xl font-bold text-blue-600">
+                            Q. ${currentQNum} / ${totalQ}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span>Chapter: <span class="font-semibold text-gray-800">${currentQ.chapter}</span></span>
+                            <span class="px-3 py-1 text-xs font-semibold text-white rounded-full ${difficultyColor}">Difficulty: ${difficultyText}</span>
+                        </div>
+
+                        <p class="text-xl font-semibold text-gray-900 leading-relaxed">${currentQ.question}</p>
+                    </div>
+
+                    <div class="space-y-3 pt-4">
+                        ${optionsHTML}
+                    </div>
+
+                    ${feedbackHTML}
+
+                    <div class="pt-4 text-center">
+                        <button onclick="appState.view = 'home'; render();" class="text-sm text-gray-500 hover:text-red-600 transition">
+                            Exit ${appState.mode === 'test' ? 'Test' : 'Quiz'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResults() {
+            const totalQuestions = appState.currentQuestionList.length;
+            const correctCount = appState.userAnswers.filter(a => a.correct).length;
+            const scorePercentage = ((correctCount / totalQuestions) * 100).toFixed(0);
+            const modeName = appState.mode === 'test' ? 'Test Mode' : 'Quiz Mode';
+
+            // Grade assignment (simple scale)
+            let grade = 'F';
+            let gradeColor = 'text-red-600';
+            if (scorePercentage >= 90) { grade = 'A'; gradeColor = 'text-green-600'; }
+            else if (scorePercentage >= 80) { grade = 'B'; gradeColor = 'text-green-500'; }
+            else if (scorePercentage >= 70) { grade = 'C'; gradeColor = 'text-yellow-500'; }
+            else if (scorePercentage >= 60) { grade = 'D'; gradeColor = 'text-orange-500'; }
+
+
+            const detailedResultsHTML = appState.userAnswers.map((answer, index) => {
+                const q = appState.currentQuestionList[index];
+                const icon = answer.correct
+                    ? '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                    : '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                const resultText = answer.correct ? 'Correct' : 'Incorrect';
+                const resultClasses = answer.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+
+                return `
+                    <div class="p-4 border rounded-lg ${resultClasses} mb-3">
+                        <div class="flex items-start justify-between">
+                            <p class="font-semibold text-gray-800">Q${index + 1}: ${q.question}</p>
+                            <span class="flex items-center space-x-1 font-bold text-sm">
+                                ${icon}
+                                <span>${resultText}</span>
+                            </span>
+                        </div>
+                        <p class="text-sm mt-2">Your Answer: <span class="${answer.correct ? 'font-semibold text-green-700' : 'font-semibold text-red-700'}">${answer.userAnswer}</span></p>
+                        ${!answer.correct ? `<p class="text-sm">Correct Answer: <span class="font-semibold text-green-700">${q.correctAnswer}</span></p>` : ''}
+                        <p class="text-xs text-gray-500 mt-1">${q.chapter} | Difficulty ${q.difficulty}</p>
+                    </div>
+                `;
+            }).join('');
+
+
+            appContainer.innerHTML = `
+                <div class="space-y-8">
+                    <h1 class="text-4xl font-extrabold text-blue-800 text-center">${modeName} Results</h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center p-4 bg-gray-50 rounded-xl shadow-inner border">
+                        <div>
+                            <p class="text-xl text-gray-500">Total Questions</p>
+                            <p class="text-4xl font-bold text-gray-800">${totalQuestions}</p>
+                        </div>
+                        <div>
+                            <p class="text-xl text-gray-500">Correct Answers</p>
+                            <p class="text-4xl font-bold text-green-600">${correctCount}</p>
+                        </div>
+                        <div>
+                            <p class="text-xl text-gray-500">Grade</p>
+                            <p class="text-5xl font-extrabold ${gradeColor}">${grade} (${scorePercentage}%)</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-700 border-b pb-2">Question-by-Question Review</h2>
+                    <div class="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        ${detailedResultsHTML}
+                    </div>
+
+                    <div class="text-center pt-4">
+                        <button onclick="appState.view = 'home'; render();" class="py-3 px-8 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-lg">
+                            Return to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudySetup() {
+            const chapters = ['Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14 (Mortgages)', 'Chapter 15'];
+            const difficulties = [
+                { value: 1, label: '1 - Easy (Recall)', color: 'bg-green-500' },
+                { value: 2, label: '2 - Medium (Application)', color: 'bg-yellow-500' },
+                { value: 3, label: '3 - Hard (Synthesis)', color: 'bg-red-500' }
+            ];
+
+            const chapterChecks = chapters.map(chap => `
+                <label class="flex items-center space-x-2 p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                    <input type="checkbox" name="chapter" value="${chap}" checked
+                           class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-700 font-medium">${chap}</span>
+                </label>
+            `).join('');
+
+            const difficultyChecks = difficulties.map(diff => `
+                <label class="flex items-center space-x-2 p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                    <input type="checkbox" name="difficulty" value="${diff.value}" checked
+                           class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-700 font-medium flex items-center">
+                        ${diff.label}
+                        <span class="w-2 h-2 ml-2 rounded-full ${diff.color}"></span>
+                    </span>
+                </label>
+            `).join('');
+
+            appContainer.innerHTML = `
+                <div class="space-y-8">
+                    <h1 class="text-3xl font-bold text-green-800 text-center border-b pb-4">Study Mode Setup</h1>
+                    <p class="text-center text-gray-600">Select the specific chapters and difficulty levels you want to review.</p>
+
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Select Chapters</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${chapterChecks}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Select Difficulty</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${difficultyChecks}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-6">
+                        <button onclick="appState.view = 'home'; render();"
+                                class="w-full py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
+                            Cancel
+                        </button>
+                        <button onclick="filterQuestions()"
+                                class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
+                            Start Study Session
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudyMode() {
+            const totalQ = appState.currentQuestionList.length;
+            if (totalQ === 0) {
+                appContainer.innerHTML = '<p class="text-center text-red-500 font-semibold">No questions matched your filters. Please return to setup.</p><div class="text-center pt-4"><button onclick="startStudySetup()" class="py-2 px-6 bg-green-600 text-white rounded-lg">Go to Setup</button></div>';
+                return;
+            }
+
+            const questionsHTML = appState.currentQuestionList.map((q, index) => {
+                const isRevealed = q.isRevealed;
+
+                let difficultyColor = 'bg-green-500';
+                if (q.difficulty === 2) difficultyColor = 'bg-yellow-500';
+                if (q.difficulty === 3) difficultyColor = 'bg-red-500';
+                
+                const answerHTML = q.options.map(option => {
+                    const isCorrect = option === q.correctAnswer;
+                    let classes = "w-full text-left py-2 px-3 rounded-lg border transition duration-150 text-gray-700";
+                    if (isCorrect) {
+                        classes = "w-full text-left py-2 px-3 rounded-lg border-2 border-green-500 bg-green-100 text-green-800 font-bold transition duration-150";
+                    }
+
+                    return `<li class="${classes}">${option}</li>`;
+                }).join('');
+
+                return `
+                    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 mb-6">
+                        <div class="flex justify-between items-center mb-4 border-b pb-3">
+                            <span class="text-xl font-bold text-gray-800">Question ${index + 1} / ${totalQ}</span>
+                            <span class="px-3 py-1 text-xs font-semibold text-white rounded-full ${difficultyColor}">
+                                D${q.difficulty} | ${q.chapter.replace('Chapter ', 'Ch ')}
+                            </span>
+                        </div>
+                        
+                        <p class="text-lg font-semibold text-gray-900 mb-4 leading-relaxed">${q.question}</p>
+
+                        <button onclick="toggleAnswer(${q.id})"
+                                class="w-full py-2 mb-4 font-semibold rounded-lg transition duration-150
+                                ${isRevealed ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-green-200 hover:bg-green-300 text-green-800'}">
+                            ${isRevealed ? 'Hide Answer' : 'Show Answer'}
+                        </button>
+                        
+                        <div id="answer-section-${q.id}" class="${isRevealed ? '' : 'study-options-hidden'} pt-4 border-t border-gray-100">
+                            <h3 class="text-md font-bold text-green-700 mb-3">Correct Solution:</h3>
+                            <ul class="space-y-2">
+                                ${answerHTML}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            appContainer.innerHTML = `
+                <div class="space-y-6">
+                    <h1 class="text-3xl font-bold text-green-800 text-center">Study Mode Session (${totalQ} Questions)</h1>
+                    <div class="text-center pb-4">
+                        <button onclick="startStudySetup()" class="py-2 px-6 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-150">
+                            Change Filters / Exit Study
+                        </button>
+                    </div>
+                    
+                    <div class="max-h-[70vh] overflow-y-auto custom-scrollbar p-1">
+                        ${questionsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+
+        // Main render function to control the view
+        function render() {
+            switch (appState.view) {
+                case 'home':
+                    renderHome();
+                    break;
+                case 'quiz':
+                    renderQuiz();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+                case 'studySetup':
+                    renderStudySetup();
+                    break;
+                case 'studyMode':
+                    renderStudyMode();
+                    break;
+            }
+            // Ensure the container is always centered
+            appContainer.parentElement.scrollTop = 0;
+        }
+
+        // Initial call to start the application: Load history first, then render
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAppState(); 
+            render();
+        });
+    </script>
+</body>
+</html>
