@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIS 245 Exam 3 Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar for better feel */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #a8a8a8;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f0f0f0; }
+
+        /* Hide the options list initially in Study Mode */
+        .study-options-hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8 flex items-center justify-center">
+
+    <div id="app" class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100 transition-all duration-500">
+        </div>
+
+    <script>
+        // --- 1. DATA STRUCTURE: 41 Questions (Exam 3) ---
+
+        // Difficulty ranking: 1 (Easy: Definition/Recall), 2 (Medium: Application/Concept), 3 (Hard: Synthesis/Detailed Recall)
+        const questionsData = [
+            // --- Chapter 9: Enterprise Applications ---
+            { id: 1, chapter: "Chapter 9", difficulty: 2, question: "Which of the following best describes the fundamental architectural structure of an Enterprise Resource Planning (ERP) system?", options: ["A) A collection of standalone legacy systems linked via temporary bridges to ensure data security.", "B) A suite of integrated software modules that push data to a centralized database for shared use by various business processes.", "C) A decentralized network where Sales and Finance maintain separate, optimized databases that sync once daily.", "D) A downstream supply chain application designed specifically to replace legacy manufacturing systems."], correctAnswer: "B) A suite of integrated software modules that push data to a centralized database for shared use by various business processes." },
+            { id: 2, chapter: "Chapter 9", difficulty: 2, question: "When discussing Supply Chain Management (SCM), the 'Bullwhip Effect' refers to:", options: ["A) The ability of a firm to whip competitors by lowering prices through just-in-time inventory.", "B) The distortion of information about the demand for a product as it passes from one entity to the next across the supply chain.", "C) The strict management of Tier 1 suppliers to ensure they do not outsource to Tier 2 suppliers without permission.", "D) The acceleration of product delivery downstream caused by removing distributors from the network."], correctAnswer: "B) The distortion of information about the demand for a product as it passes from one entity to the next across the supply chain." },
+            { id: 3, chapter: "Chapter 9", difficulty: 3, question: "In the context of Nike’s supply chain as shown in the lecture, which of the following activities is considered an 'Upstream' process?", options: ["A) A retailer placing an order for new sneaker inventory.", "B) A distributor moving finished goods to a retail outlet.", "C) A Tier 2 supplier providing sneaker soles to a contract supplier.", "D) A customer returning a pair of shoes to the manufacturer."], correctAnswer: "C) A Tier 2 supplier providing sneaker soles to a contract supplier." },
+            { id: 4, chapter: "Chapter 9", difficulty: 3, question: "A company implements a system that specifically helps them determine how much of a specific product to manufacture in a given time period and where to store finished goods. This is best described as:", options: ["A) A Supply Chain Planning System.", "B) A Supply Chain Execution System.", "C) A Customer Relationship Management Service Module.", "D) An ERP Financial Accounting Module."], correctAnswer: "A) A Supply Chain Planning System." },
+            { id: 5, chapter: "Chapter 9", difficulty: 2, question: "Analytical CRM differs from Operational CRM because Analytical CRM:", options: ["A) Focuses on customer-facing applications like call centers and sales force automation.", "B) Uses a customer data warehouse and tools like OLAP and data mining to identify customer churn rates and profiles.", "C) Is primarily used by field service technicians to route their daily schedules.", "D) Is the module responsible for sending email marketing campaigns and tracking open rates."], correctAnswer: "B) Uses a customer data warehouse and tools like OLAP and data mining to identify customer churn rates and profiles." },
+            { id: 6, chapter: "Chapter 9", difficulty: 2, question: "Which of the following is NOT a business value typically associated with effective ERP systems?", options: ["A) Standardization of business processes across different countries.", "B) Providing up-to-the-minute data on sales and inventory.", "C) Allowing different departments to maintain unique, siloed data definitions to protect departmental autonomy.", "D) Improving the accuracy of sales and production forecasts."], correctAnswer: "C) Allowing different departments to maintain unique, siloed data definitions to protect departmental autonomy." },
+            { id: 7, chapter: "Chapter 9", difficulty: 2, question: "According to the AI capabilities in CRM systems, 'Pricing Optimization' utilizes AI to:", options: ["A) Automatically charge the lowest possible price to undercut competitors.", "B) Recommend a price that balances the most revenue with the highest likelihood to close the deal.", "C) Use chatbots to haggle with customers without human interaction.", "D) Scan competitor websites to copy their discount codes."], correctAnswer: "B) Recommend a price that balances the most revenue with the highest likelihood to close the deal." },
+            { id: 8, chapter: "Chapter 9", difficulty: 1, question: "Which major enterprise application vendor is noted in the slides for primarily targeting small to medium-sized companies with its Dynamics 365 AI suite?", options: ["A) Oracle", "B) SAP", "C) Salesforce", "D) Microsoft"], correctAnswer: "D) Microsoft" },
+
+            // --- Chapter 10: E-commerce ---
+            { id: 9, chapter: "Chapter 10", difficulty: 2, question: "Which unique feature of e-commerce technology allows a merchant to engage a consumer in a dialogue that dynamically adjusts the experience to the individual?", options: ["A) Personalization", "B) Interactivity", "C) Richness", "D) Customization"], correctAnswer: "B) Interactivity" },
+            { id: 10, chapter: "Chapter 10", difficulty: 3, question: "The 'Information Density' feature of e-commerce technology results in:", options: ["A) Increased information costs for merchants but higher quality data.", "B) A reduction in price transparency and cost transparency.", "C) A dramatic drop in information storage and communication costs, making information more accurate and plentiful.", "D) The ability to send complex video and audio messages simultaneously."], correctAnswer: "C) A dramatic drop in information storage and communication costs, making information more accurate and plentiful." },
+            { id: 11, chapter: "Chapter 10", difficulty: 1, question: "A business model where a company creates a digital environment for buyers and sellers to meet, display products, and establish prices (generating revenue from fees) is called a:", options: ["A) Transaction Broker", "B) Market Creator", "C) Community Provider", "D) E-tailer"], correctAnswer: "B) Market Creator" },
+            { id: 12, chapter: "Chapter 10", difficulty: 2, question: "In the 'Affiliate' revenue model, how does a firm generate revenue?", options: ["A) By charging a subscription fee for access to premium content.", "B) By creating a 'freemium' tier where basic services are free.", "C) By steering customers to another business and receiving a referral fee or percentage of the resulting sale.", "D) By charging a transaction fee every time a stock is traded or a room is booked."], correctAnswer: "C) By steering customers to another business and receiving a referral fee or percentage of the resulting sale." },
+            { id: 13, chapter: "Chapter 10", difficulty: 2, question: "'Native Advertising' is best defined as:", options: ["A) Tracking the clickstreams of individuals to expose them to uniquely suited ads.", "B) Pop-up ads that appear natively in the center of the screen.", "C) Advertising that looks similar to editorial content but is inconspicuously tagged as 'sponsored'.", "D) Ads that are strictly placed on the homepage of a website to greet visitors natively."], correctAnswer: "C) Advertising that looks similar to editorial content but is inconspicuously tagged as 'sponsored'." },
+            { id: 14, chapter: "Chapter 10", difficulty: 2, question: "Which of the following correctly describes 'Behavioral Targeting'?", options: ["A) Sending the same email blast to all customers based on their geographic region.", "B) Tracking the history of clicking behavior (clickstreams) to understand interests and expose users to specific ads.", "C) Using AI to generate editorial content that mimics news articles.", "D) A B2B process for automating invoice exchanges."], correctAnswer: "B) Tracking the history of clicking behavior (clickstreams) to understand interests and expose users to specific ads." },
+            { id: 15, chapter: "Chapter 10", difficulty: 2, question: "Regarding B2B commerce, what is an 'Exchange'?", options: ["A) A private network linking a single firm to its specific suppliers.", "B) An independently owned third-party marketplace that connects many suppliers and buyers for spot purchasing.", "C) A legacy system used only for sending invoices via EDI.", "D) The continuous replenishment system used by Walmart."], correctAnswer: "B) An independently owned third-party marketplace that connects many suppliers and buyers for spot purchasing." },
+            { id: 16, chapter: "Chapter 10", difficulty: 1, question: "What is the primary function of Electronic Data Interchange (EDI)?", options: ["A) It is a social network for B2B marketing.", "B) It facilitates the computer-to-computer exchange of standard business documents like invoices and purchase orders.", "C) It is an AI tool used to predict supply chain breakage.", "D) It is a B2C platform for selling digital goods."], correctAnswer: "B) It facilitates the computer-to-computer exchange of standard business documents like invoices and purchase orders." },
+            { id: 17, chapter: "Chapter 10", difficulty: 2, question: "According to the text, which e-commerce business model saves users money and time by processing online sales transactions and generating a fee each time?", options: ["A) Market Creator", "B) Transaction Broker", "C) Portal", "D) Content Provider"], correctAnswer: "B) Transaction Broker" },
+            { id: 18, chapter: "Chapter 10", difficulty: 2, question: "When looking at the 'Richness' of e-commerce technology, what does it refer to?", options: ["A) The total number of people the technology can reach globally.", "B) The complexity and content of a message, including the integration of video, audio, and text.", "C) The amount of money a company can make using the technology.", "D) The ability to access the technology from mobile devices everywhere (Ubiquity)."], correctAnswer: "B) The complexity and content of a message, including the integration of video, audio, and text." },
+            { id: 19, chapter: "Chapter 10", difficulty: 1, question: "What event marked the beginning of e-commerce?", options: ["A) The first product sold online", "B) The first domain name registered", "C) The first email sent", "D) The first paid advertisements placed on websites"], correctAnswer: "D) The first paid advertisements placed on websites" },
+            { id: 20, chapter: "Chapter 10", difficulty: 2, question: "In digital markets ________.", options: ["A) Search costs increase", "B) Menu costs are lower", "C) Switching costs decline", "D) Network costs decline"], correctAnswer: "B) Menu costs are lower" },
+            { id: 21, chapter: "Chapter 10", difficulty: 1, question: "Streaming is a publishing method for music and video files that flows a continuous stream of content to a user's device without being locally stored on the device.", options: ["TRUE", "FALSE"], correctAnswer: "TRUE" },
+
+            // --- Chapter 11: Artificial Intelligence ---
+            { id: 22, chapter: "Chapter 11", difficulty: 2, question: "Which of the following best distinguishes 'Supervised Learning' from 'Unsupervised Learning'?", options: ["A) Supervised learning requires human intervention to manually code every rule, whereas unsupervised learning uses neural networks.", "B) Supervised learning involves training the system with specific examples of desired inputs and outputs, whereas unsupervised learning identifies patterns in data without known outcomes.", "C) Supervised learning is used for creative tasks like Generative AI, while unsupervised learning is strictly for robotics.", "D) Supervised learning uses 'Deep Learning' layers, while unsupervised learning relies on 'Fuzzy Logic'."], correctAnswer: "B) Supervised learning involves training the system with specific examples of desired inputs and outputs, whereas unsupervised learning identifies patterns in data without known outcomes." },
+            { id: 23, chapter: "Chapter 11", difficulty: 3, question: "In the context of Neural Networks, what is the specific function of the 'Hidden Layer'?", options: ["A) It is the layer where the final decision (e.g., 'Valid Purchase') is presented to the user.", "B) It is a security feature that encrypts data inputs to prevent AI hallucinations.", "C) It processes inputs and classifies them based on the model's experience or 'learned' logic before passing them to the output layer.", "D) It serves as the initial collection point for raw data such as age, income, and purchase history."], correctAnswer: "C) It processes inputs and classifies them based on the model's experience or 'learned' logic before passing them to the output layer." },
+            { id: 24, chapter: "Chapter 11", difficulty: 2, question: "'Fuzzy Logic' differs from traditional logic systems because it:", options: ["A) Relies on strict '0 or 1' binary code to make precise calculations.", "B) Uses genetic algorithms to mutate solutions over time.", "C) Represents imprecision by using rules with approximate or subjective values (e.g., 'warm' or 'cool') rather than precise numbers.", "D) Is the primary logic used in Generative AI to hallucinate new content."], correctAnswer: "C) Represents imprecision by using rules with approximate or subjective values (e.g., 'warm' or 'cool') rather than precise numbers." },
+            { id: 25, chapter: "Chapter 11", difficulty: 1, question: "Which branch of AI is responsible for systems that can view and extract information from real-world images, such as facial recognition or self-driving car navigation?", options: ["A) Natural Language Processing (NLP)", "B) Computer Vision", "C) Robotics", "D) Intelligent Agents"], correctAnswer: "B) Computer Vision" },
+            { id: 26, chapter: "Chapter 11", difficulty: 2, question: "What is 'AI Hallucination' as described in the lecture?", options: ["A) A cybersecurity breach where hackers inject false images into a database.", "B) An incorrect or misleading result generated by a Large Language Model (LLM) that is presented confidently as fact.", "C) The ability of an AI to generate creative art, such as painting or poetry, that mimics human imagination.", "D) A bias in the training data that leads to discriminatory outcomes against marginalized groups."], correctAnswer: "B) An incorrect or misleading result generated by a Large Language Model (LLM) that is presented confidently as fact." },
+            { id: 27, chapter: "Chapter 11", difficulty: 2, question: "Which of the following best describes 'Generative AI' (GenAI)?", options: ["A) A system that can only classify existing data into pre-defined categories.", "B) A machine learning model trained to identify patterns and structures in existing data to produce new and original content (text, images, code).", "C) A set of IF-THEN rules programmed by experts to assist human decision-makers.", "D) A computer vision system used strictly for manufacturing fault detection."], correctAnswer: "B) A machine learning model trained to identify patterns and structures in existing data to produce new and original content (text, images, code)." },
+            { id: 28, chapter: "Chapter 11", difficulty: 2, question: "'Natural Language Processing' (NLP) faces challenges because:", options: ["A) It cannot be used for written text, only for spoken speech.", "B) Human language is often ambiguous, and meanings depend on complex variables like slang and social context.", "C) It requires 'Fuzzy Logic' to operate, which is incompatible with modern processors.", "D) It is limited to understanding only one language at a time."], correctAnswer: "B) Human language is often ambiguous, and meanings depend on complex variables like slang and social context." },
+            { id: 29, chapter: "Chapter 11", difficulty: 1, question: "An 'Intelligent Agent' is best defined as:", options: ["A) A physical robot that works alongside humans in a warehouse.", "B) A software program that works in the background without direct human intervention to carry out specific tasks (e.g., Siri, chatbots).", "C) A human expert who trains AI models to avoid bias.", "D) A web crawler that scans the internet for malicious malware only."], correctAnswer: "B) A software program that works in the background without direct human intervention to carry out specific tasks (e.g., Siri, chatbots)." },
+            { id: 30, chapter: "Chapter 11", difficulty: 2, question: "What is NOT true about AI-generated deepfakes?", options: ["A) They are synonymous with identify theft.", "B) They are not to the level yet of undermining facial recognition systems, but might someday.", "C) They are artificial images, videos, and/or audio that have been digitally manipulated.", "D) Most Large Language models are immune to deepfakes because of the amount of information they contain."], correctAnswer: "D) Most Large Language models are immune to deepfakes because of the amount of information they contain." },
+            { id: 31, chapter: "Chapter 11", difficulty: 3, question: "Which of the following is NOT true about AI bias?", options: ["A) AI systems learn to make decisions based on training data, and bias can be embedded in training data.", "B) Amazon began using a hiring algorithm after finding it favored applicants based on certain words.", "C) AI bias may include training data bias, algorithmic bias, and cognitive bias.", "D) Algorithmic bias can be caused by programming errors."], correctAnswer: "B) Amazon began using a hiring algorithm after finding it favored applicants based on certain words." },
+
+            // --- Chapter 12: Data Analytics & Business Intelligence ---
+            { id: 32, chapter: "Chapter 12", difficulty: 2, question: "According to Simon’s decision-making process, the 'Intelligence' stage consists of:", options: ["A) Identifying and exploring various solutions to the problem.", "B) Choosing among the solution alternatives.", "C) Discovering, identifying, and understanding the problems occurring in the organization.", "D) Making the chosen alternative work and monitoring its success."], correctAnswer: "C) Discovering, identifying, and understanding the problems occurring in the organization." },
+            { id: 33, chapter: "Chapter 12", difficulty: 2, question: "Which of the following is an example of an 'Unstructured Decision'?", options: ["A) Restocking inventory when levels drop below a certain threshold.", "B) Determining overtime eligibility for hourly employees.", "C) Deciding whether to enter or exit a new market over the next five years.", "D) Offering credit to a customer based on a pre-set credit score."], correctAnswer: "C) Deciding whether to enter or exit a new market over the next five years." },
+            { id: 34, chapter: "Chapter 12", difficulty: 3, question: "How does 'Prescriptive Analytics' differ from 'Predictive Analytics'?", options: ["A) Predictive analytics uses historical data to guess the future, while Prescriptive analytics only looks at past performance reports.", "B) Predictive analytics forecasts future trends, while Prescriptive analytics recommends specific actions or decisions to achieve desired outcomes.", "C) Predictive analytics is for senior management, while Prescriptive analytics is for operational employees.", "D) Predictive analytics uses 'Data Mining,' while Prescriptive analytics relies solely on 'Dashboards'."], correctAnswer: "B) Predictive analytics forecasts future trends, while Prescriptive analytics recommends specific actions or decisions to achieve desired outcomes." },
+            { id: 35, chapter: "Chapter 12", difficulty: 3, question: "In the Balanced Scorecard Framework, which of the following is NOT one of the four dimensions used to measure strategic objectives?", options: ["A) Financial", "B) Business Processes", "C) Learning and Growth", "D) Competitor Analysis"], correctAnswer: "D) Competitor Analysis" },
+            { id: 36, chapter: "Chapter 12", difficulty: 2, question: "Which of the following managerial roles, as defined by Mintzberg, falls under the 'Decisional' category?", options: ["A) Figurehead", "B) Disseminator", "C) Resource Allocator", "D) Liaison"], correctAnswer: "C) Resource Allocator" },
+            { id: 37, chapter: "Chapter 12", difficulty: 2, question: "Which term refers to the infrastructure (warehouses, marts, platforms) that supplies data and tools for decision-making?", options: ["A) Business Analytics (BA)", "B) Business Intelligence (BI)", "C) Data Mining", "D) Predictive Modeling"], correctAnswer: "B) Business Intelligence (BI)" },
+            { id: 38, chapter: "Chapter 12", difficulty: 2, question: "A 'Sensitivity Analysis' (often done in spreadsheets) helps decision-makers by:", options: ["A) Filtering out sensitive data to protect user privacy.", "B) Asking questions like 'What happens to the break-even point if the sales price increases or decreases?'", "C) Analyzing the sentiment of customer emails using NLP.", "D) Visualizing the geographic distribution of customers."], correctAnswer: "B) Asking questions like 'What happens to the break-even point if the sales price increases or decreases?'" },
+            { id: 39, chapter: "Chapter 12", difficulty: 2, question: "Why might information systems fail to improve decision-making, according to the slides?", options: ["A) Management filters and 'confirmation bias' may cause managers to reject evidence that contradicts their existing beliefs.", "B) Structured decisions are too complex for computers to handle.", "C) Data analytics is generally too expensive for most firms to implement.", "D) BI systems cannot produce real-time data."], correctAnswer: "A) Management filters and 'confirmation bias' may cause managers to reject evidence that contradicts their existing beliefs." },
+            { id: 40, chapter: "Chapter 12", difficulty: 2, question: "Which type of BI user is considered a 'Power User' or 'Producer' (representing about 20% of employees)?", options: ["A) Operational employees who view daily reports.", "B) Senior managers who look at dashboards.", "C) IT developers and Business Analysts who create queries, models, and forecasts.", "D) Customers and Suppliers who access external portals."], correctAnswer: "C) IT developers and Business Analysts who create queries, models, and forecasts." },
+            { id: 41, chapter: "Chapter 12", difficulty: 2, question: "Humans are eliminated from the decision chain because they are too slow in which decision-making process?", options: ["A) Semi-structured", "B) High-velocity", "C) Analytic", "D) Financial"], correctAnswer: "B) High-velocity" }
+        ];
+
+
+        // --- 2. APP STATE MANAGEMENT & INITIALIZATION ---
+        
+        let appState = {
+            view: 'home', // 'home', 'quiz', 'results', 'studySetup', 'studyMode'
+            mode: null, // 'test', 'quiz', or 'study'
+            currentQuestionIndex: 0,
+            currentQuestionList: [],
+            userAnswers: [],
+            feedbackMessage: null,
+            correctAnswer: null,
+            selectedOption: null,
+            isAnswered: false,
+            // Study Mode filters
+            studyFilters: {
+                chapters: ['Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                difficulties: [1, 2, 3]
+            },
+            // History of the last 10 quiz attempts
+            quizHistory: [],
+        };
+
+        const appContainer = document.getElementById('app');
+        const HISTORY_KEY = 'mis245_exam3_history'; // Updated key for Exam 3
+        const MAX_HISTORY_ATTEMPTS = 10;
+
+        /**
+         * Loads quiz history from localStorage on startup.
+         */
+        function initializeAppState() {
+            const historyString = localStorage.getItem(HISTORY_KEY);
+            try {
+                const loadedHistory = historyString ? JSON.parse(historyString) : [];
+                appState.quizHistory = Array.isArray(loadedHistory) ? loadedHistory : [];
+            } catch (e) {
+                console.error("Error loading quiz history from localStorage:", e);
+                appState.quizHistory = [];
+            }
+        }
+        
+        /**
+         * Saves the current quiz IDs to history and prunes the list to MAX_HISTORY_ATTEMPTS.
+         */
+        function saveQuizHistory() {
+            const currentQuizIds = appState.currentQuestionList.map(q => q.id);
+            
+            appState.quizHistory.push(currentQuizIds);
+            
+            if (appState.quizHistory.length > MAX_HISTORY_ATTEMPTS) {
+                appState.quizHistory = appState.quizHistory.slice(-MAX_HISTORY_ATTEMPTS);
+            }
+            
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(appState.quizHistory));
+            } catch (e) {
+                console.error("Error saving quiz history to localStorage:", e);
+            }
+        }
+
+
+        // --- 3. HELPER FUNCTIONS ---
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- 4. CORE LOGIC (Test/Quiz Modes) ---
+
+        function startMode(mode) {
+            appState.mode = mode;
+            appState.userAnswers = [];
+            appState.currentQuestionIndex = 0;
+            appState.feedbackMessage = null;
+            appState.correctAnswer = null;
+            appState.selectedOption = null;
+            appState.isAnswered = false;
+
+            if (mode === 'test') {
+                appState.currentQuestionList = [...questionsData];
+                // Optional: shuffle test questions or keep them in order. Let's keep order for "Review" feel, or shuffle for "Test" feel.
+                // Keeping standard order for Exam Review usually helps, but shuffle is better for testing.
+                // Let's shuffle for the "Test Mode" to ensure they know the content, not the order.
+                shuffleArray(appState.currentQuestionList);
+            } else if (mode === 'quiz') {
+                const QUIZ_SIZE = 10;
+                
+                const recentlyUsedIds = appState.quizHistory.flat(); 
+                
+                const unseenQuestions = questionsData.filter(q => !recentlyUsedIds.includes(q.id));
+                const seenQuestions = questionsData.filter(q => recentlyUsedIds.includes(q.id));
+
+                shuffleArray(unseenQuestions);
+                shuffleArray(seenQuestions);
+
+                let selectedQuestions = [];
+                
+                const unseenToTake = Math.min(unseenQuestions.length, QUIZ_SIZE);
+                selectedQuestions.push(...unseenQuestions.slice(0, unseenToTake));
+
+                const remainingSlots = QUIZ_SIZE - selectedQuestions.length;
+                if (remainingSlots > 0) {
+                    selectedQuestions.push(...seenQuestions.slice(0, remainingSlots));
+                }
+
+                shuffleArray(selectedQuestions);
+                appState.currentQuestionList = selectedQuestions;
+            }
+
+            appState.view = 'quiz'; 
+            render();
+        }
+
+        function checkAnswer(selectedOption) {
+            if (appState.isAnswered) return; 
+
+            const currentQ = appState.currentQuestionList[appState.currentQuestionIndex];
+            const isCorrect = (selectedOption === currentQ.correctAnswer);
+
+            appState.selectedOption = selectedOption;
+            appState.correctAnswer = currentQ.correctAnswer;
+            appState.isAnswered = true;
+
+            if (isCorrect) {
+                appState.feedbackMessage = "Correct!";
+            } else {
+                appState.feedbackMessage = "Incorrect. The correct answer is:";
+            }
+
+            appState.userAnswers.push({
+                questionId: currentQ.id,
+                userAnswer: selectedOption,
+                correct: isCorrect
+            });
+
+            render();
+        }
+
+        function nextQuestion() {
+            if (!appState.isAnswered) {
+                return;
+            }
+
+            appState.currentQuestionIndex++;
+            appState.feedbackMessage = null;
+            appState.correctAnswer = null;
+            appState.selectedOption = null;
+            appState.isAnswered = false;
+
+            if (appState.currentQuestionIndex >= appState.currentQuestionList.length) {
+                if (appState.mode === 'quiz') {
+                    saveQuizHistory();
+                }
+                appState.view = 'results';
+            }
+            render();
+        }
+
+        // --- 5. CORE LOGIC (Study Mode) ---
+
+        function startStudySetup() {
+            appState.view = 'studySetup';
+            render();
+        }
+
+        function filterQuestions() {
+            const chapterInputs = document.querySelectorAll('input[name="chapter"]:checked');
+            const difficultyInputs = document.querySelectorAll('input[name="difficulty"]:checked');
+
+            const selectedChapters = Array.from(chapterInputs).map(input => input.value);
+            const selectedDifficulties = Array.from(difficultyInputs).map(input => parseInt(input.value));
+
+            if (selectedChapters.length === 0 || selectedDifficulties.length === 0) {
+                alert('Please select at least one Chapter and one Difficulty level.');
+                return;
+            }
+
+            appState.currentQuestionList = questionsData
+                .filter(q => selectedChapters.includes(q.chapter))
+                .filter(q => selectedDifficulties.includes(q.difficulty))
+                .map(q => ({ ...q, isRevealed: false }));
+
+            if (appState.currentQuestionList.length === 0) {
+                 alert('No questions match the selected filters. Please adjust your selections.');
+                 return;
+            }
+
+            appState.mode = 'study';
+            appState.view = 'studyMode';
+            render();
+        }
+
+        function toggleAnswer(questionId) {
+            const index = appState.currentQuestionList.findIndex(q => q.id === questionId);
+            if (index !== -1) {
+                appState.currentQuestionList[index].isRevealed = !appState.currentQuestionList[index].isRevealed;
+                render();
+            }
+        }
+
+        // --- 6. RENDER FUNCTIONS ---
+
+        function renderHome() {
+            const historyCount = appState.quizHistory.length;
+            const trackingMessage = historyCount === 0 
+                ? 'No history yet. Start quizzing!'
+                : `Tracking the last ${historyCount} attempt${historyCount !== 1 ? 's' : ''} to improve variety.`;
+
+            appContainer.innerHTML = `
+                <div class="text-center space-y-8">
+                    <h1 class="text-4xl font-extrabold text-blue-800">MIS 245 Exam 3 Review</h1>
+                    <p class="text-lg text-gray-600">Chapters 9-12: Select a study mode to begin.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                        <div class="p-6 bg-blue-50 border-2 border-blue-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-blue-400">
+                            <h2 class="text-2xl font-bold text-blue-800">Test Mode</h2>
+                            <p class="text-gray-600 text-sm">Answer all <span class="font-bold text-blue-600">${questionsData.length} questions</span> with immediate feedback.</p>
+                            <button onclick="startMode('test')" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 shadow-md">
+                                Start Test Mode
+                            </button>
+                        </div>
+                        <div class="p-6 bg-indigo-50 border-2 border-indigo-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-indigo-400">
+                            <h2 class="text-2xl font-bold text-indigo-800">Quiz Mode</h2>
+                            <p class="text-gray-600 text-sm">Answer <span class="font-bold text-indigo-600">10 smart-selected questions</span> for a quick check.
+                                <span class="block mt-2 text-xs text-gray-500 font-medium">
+                                    ${trackingMessage}
+                                </span>
+                            </p>
+                            <button onclick="startMode('quiz')" class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md">
+                                Start Quiz Mode
+                            </button>
+                        </div>
+                        <div class="p-6 bg-green-50 border-2 border-green-200 rounded-lg space-y-4 shadow-lg transition duration-300 hover:shadow-xl hover:border-green-400">
+                            <h2 class="text-2xl font-bold text-green-800">Study Mode</h2>
+                            <p class="text-gray-600 text-sm">Filter by chapter/difficulty. Answers are hidden until revealed.</p>
+                            <button onclick="startStudySetup()" class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
+                                Set Up Study
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuiz() {
+            const currentQ = appState.currentQuestionList[appState.currentQuestionIndex];
+            if (!currentQ) {
+                appState.view = 'results';
+                render();
+                return;
+            }
+
+            const currentQNum = appState.currentQuestionIndex + 1;
+            const totalQ = appState.currentQuestionList.length;
+            const modeName = appState.mode === 'test' ? `Test Mode (All ${totalQ})` : 'Quiz Mode (10 Questions)';
+
+            let difficultyColor = 'bg-green-500';
+            let difficultyText = 'Easy';
+            if (currentQ.difficulty === 2) {
+                difficultyColor = 'bg-yellow-500';
+                difficultyText = 'Medium';
+            } else if (currentQ.difficulty === 3) {
+                difficultyColor = 'bg-red-500';
+                difficultyText = 'Hard';
+            }
+
+            const optionsHTML = currentQ.options.map(option => {
+                let classes = "w-full text-left py-3 px-4 rounded-lg border-2 cursor-pointer transition duration-150 ease-in-out font-medium ";
+                let clickHandler = `checkAnswer('${option.replace(/'/g, "\\'")}')`; 
+
+                if (appState.isAnswered) {
+                    clickHandler = ''; 
+                    if (option === appState.correctAnswer) {
+                        classes += "bg-green-100 border-green-500 text-green-800 shadow-md";
+                    } else if (option === appState.selectedOption) {
+                        classes += "bg-red-100 border-red-500 text-red-800 shadow-md";
+                    } else {
+                        classes += "bg-white border-gray-200 text-gray-600 opacity-60";
+                    }
+                } else {
+                    classes += "bg-white border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-400";
+                }
+
+                return `<button onclick="${clickHandler}" class="${classes}">${option}</button>`;
+            }).join('');
+
+            let feedbackHTML = '';
+            if (appState.isAnswered) {
+                const isCorrect = (appState.selectedOption === appState.correctAnswer);
+                let messageClasses = isCorrect ? 'bg-green-100 text-green-800 border-green-400' : 'bg-red-100 text-red-800 border-red-400';
+
+                feedbackHTML = `
+                    <div class="mt-6 p-4 rounded-lg border-l-4 ${messageClasses}">
+                        <p class="font-bold text-lg">${appState.feedbackMessage}</p>
+                        ${!isCorrect ? `<p class="mt-2 text-md">The correct answer was: <span class="font-semibold">${appState.correctAnswer}</span></p>` : ''}
+                    </div>
+                    <div class="mt-6">
+                        <button onclick="nextQuestion()" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 shadow-md">
+                            ${currentQNum < totalQ ? 'Next Question' : 'View Results'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            appContainer.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center pb-4 border-b">
+                        <h2 class="text-xl font-bold text-gray-700">${modeName}</h2>
+                        <div class="text-2xl font-bold text-blue-600">
+                            Q. ${currentQNum} / ${totalQ}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span>Chapter: <span class="font-semibold text-gray-800">${currentQ.chapter}</span></span>
+                            <span class="px-3 py-1 text-xs font-semibold text-white rounded-full ${difficultyColor}">Difficulty: ${difficultyText}</span>
+                        </div>
+
+                        <p class="text-2xl font-semibold text-gray-900 leading-relaxed">${currentQ.question}</p>
+                    </div>
+
+                    <div class="space-y-3 pt-4">
+                        ${optionsHTML}
+                    </div>
+
+                    ${feedbackHTML}
+
+                    <div class="pt-4 text-center">
+                        <button onclick="appState.view = 'home'; render();" class="text-sm text-gray-500 hover:text-red-600 transition">
+                            Exit ${appState.mode === 'test' ? 'Test' : 'Quiz'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResults() {
+            const totalQuestions = appState.currentQuestionList.length;
+            const correctCount = appState.userAnswers.filter(a => a.correct).length;
+            const scorePercentage = ((correctCount / totalQuestions) * 100).toFixed(0);
+            const modeName = appState.mode === 'test' ? 'Test Mode' : 'Quiz Mode';
+
+            let grade = 'F';
+            let gradeColor = 'text-red-600';
+            if (scorePercentage >= 90) { grade = 'A'; gradeColor = 'text-green-600'; }
+            else if (scorePercentage >= 80) { grade = 'B'; gradeColor = 'text-green-500'; }
+            else if (scorePercentage >= 70) { grade = 'C'; gradeColor = 'text-yellow-500'; }
+            else if (scorePercentage >= 60) { grade = 'D'; gradeColor = 'text-orange-500'; }
+
+
+            const detailedResultsHTML = appState.userAnswers.map((answer, index) => {
+                const q = appState.currentQuestionList[index];
+                const icon = answer.correct
+                    ? '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                    : '<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                const resultText = answer.correct ? 'Correct' : 'Incorrect';
+                const resultClasses = answer.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+
+                return `
+                    <div class="p-4 border rounded-lg ${resultClasses} mb-3">
+                        <div class="flex items-start justify-between">
+                            <p class="font-semibold text-gray-800">Q${index + 1}: ${q.question}</p>
+                            <span class="flex items-center space-x-1 font-bold text-sm">
+                                ${icon}
+                                <span>${resultText}</span>
+                            </span>
+                        </div>
+                        <p class="text-sm mt-2">Your Answer: <span class="${answer.correct ? 'font-semibold text-green-700' : 'font-semibold text-red-700'}">${answer.userAnswer}</span></p>
+                        ${!answer.correct ? `<p class="text-sm">Correct Answer: <span class="font-semibold text-green-700">${q.correctAnswer}</span></p>` : ''}
+                        <p class="text-xs text-gray-500 mt-1">Chapter ${q.chapter.replace('Chapter ', '')} | Difficulty ${q.difficulty}</p>
+                    </div>
+                `;
+            }).join('');
+
+
+            appContainer.innerHTML = `
+                <div class="space-y-8">
+                    <h1 class="text-4xl font-extrabold text-blue-800 text-center">${modeName} Results</h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center p-4 bg-gray-50 rounded-xl shadow-inner border">
+                        <div>
+                            <p class="text-xl text-gray-500">Total Questions</p>
+                            <p class="text-4xl font-bold text-gray-800">${totalQuestions}</p>
+                        </div>
+                        <div>
+                            <p class="text-xl text-gray-500">Correct Answers</p>
+                            <p class="text-4xl font-bold text-green-600">${correctCount}</p>
+                        </div>
+                        <div>
+                            <p class="text-xl text-gray-500">Grade</p>
+                            <p class="text-5xl font-extrabold ${gradeColor}">${grade} (${scorePercentage}%)</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-700 border-b pb-2">Question-by-Question Review</h2>
+                    <div class="max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        ${detailedResultsHTML}
+                    </div>
+
+                    <div class="text-center pt-4">
+                        <button onclick="appState.view = 'home'; render();" class="py-3 px-8 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-lg">
+                            Return to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudySetup() {
+            const chapters = ['Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'];
+            const difficulties = [
+                { value: 1, label: '1 - Easy (Recall)', color: 'bg-green-500' },
+                { value: 2, label: '2 - Medium (Application)', color: 'bg-yellow-500' },
+                { value: 3, label: '3 - Hard (Synthesis)', color: 'bg-red-500' }
+            ];
+
+            const chapterChecks = chapters.map(chap => `
+                <label class="flex items-center space-x-2 p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                    <input type="checkbox" name="chapter" value="${chap}" checked
+                           class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-700 font-medium">${chap}</span>
+                </label>
+            `).join('');
+
+            const difficultyChecks = difficulties.map(diff => `
+                <label class="flex items-center space-x-2 p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                    <input type="checkbox" name="difficulty" value="${diff.value}" checked
+                           class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-gray-700 font-medium flex items-center">
+                        ${diff.label}
+                        <span class="w-2 h-2 ml-2 rounded-full ${diff.color}"></span>
+                    </span>
+                </label>
+            `).join('');
+
+            appContainer.innerHTML = `
+                <div class="space-y-8">
+                    <h1 class="text-3xl font-bold text-green-800 text-center border-b pb-4">Study Mode Setup</h1>
+                    <p class="text-center text-gray-600">Select the specific chapters and difficulty levels you want to review.</p>
+
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Select Chapters</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            ${chapterChecks}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Select Difficulty</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${difficultyChecks}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-6">
+                        <button onclick="appState.view = 'home'; render();"
+                                class="w-full py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
+                            Cancel
+                        </button>
+                        <button onclick="filterQuestions()"
+                                class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md">
+                            Start Study Session
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudyMode() {
+            const totalQ = appState.currentQuestionList.length;
+            if (totalQ === 0) {
+                appContainer.innerHTML = '<p class="text-center text-red-500 font-semibold">No questions matched your filters. Please return to setup.</p><div class="text-center pt-4"><button onclick="startStudySetup()" class="py-2 px-6 bg-green-600 text-white rounded-lg">Go to Setup</button></div>';
+                return;
+            }
+
+            const questionsHTML = appState.currentQuestionList.map((q, index) => {
+                const isRevealed = q.isRevealed;
+
+                let difficultyColor = 'bg-green-500';
+                if (q.difficulty === 2) difficultyColor = 'bg-yellow-500';
+                if (q.difficulty === 3) difficultyColor = 'bg-red-500';
+                
+                const answerHTML = q.options.map(option => {
+                    const isCorrect = option === q.correctAnswer;
+                    let classes = "w-full text-left py-2 px-3 rounded-lg border transition duration-150 text-gray-700";
+                    if (isCorrect) {
+                        classes = "w-full text-left py-2 px-3 rounded-lg border-2 border-green-500 bg-green-100 text-green-800 font-bold transition duration-150";
+                    }
+
+                    return `<li class="${classes}">${option}</li>`;
+                }).join('');
+
+                return `
+                    <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200 mb-6">
+                        <div class="flex justify-between items-center mb-4 border-b pb-3">
+                            <span class="text-xl font-bold text-gray-800">Question ${index + 1} / ${totalQ}</span>
+                            <span class="px-3 py-1 text-xs font-semibold text-white rounded-full ${difficultyColor}">
+                                D${q.difficulty} | ${q.chapter.replace('Chapter ', 'Ch ')}
+                            </span>
+                        </div>
+                        
+                        <p class="text-lg font-semibold text-gray-900 mb-4 leading-relaxed">${q.question}</p>
+
+                        <button onclick="toggleAnswer(${q.id})"
+                                class="w-full py-2 mb-4 font-semibold rounded-lg transition duration-150
+                                ${isRevealed ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-green-200 hover:bg-green-300 text-green-800'}">
+                            ${isRevealed ? 'Hide Answer' : 'Show Answer'}
+                        </button>
+                        
+                        <div id="answer-section-${q.id}" class="${isRevealed ? '' : 'study-options-hidden'} pt-4 border-t border-gray-100">
+                            <h3 class="text-md font-bold text-green-700 mb-3">Correct Solution:</h3>
+                            <ul class="space-y-2">
+                                ${answerHTML}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            appContainer.innerHTML = `
+                <div class="space-y-6">
+                    <h1 class="text-3xl font-bold text-green-800 text-center">Study Mode Session (${totalQ} Questions)</h1>
+                    <div class="text-center pb-4">
+                        <button onclick="startStudySetup()" class="py-2 px-6 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-150">
+                            Change Filters / Exit Study
+                        </button>
+                    </div>
+                    
+                    <div class="max-h-[70vh] overflow-y-auto custom-scrollbar p-1">
+                        ${questionsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+
+        // Main render function to control the view
+        function render() {
+            switch (appState.view) {
+                case 'home':
+                    renderHome();
+                    break;
+                case 'quiz':
+                    renderQuiz();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+                case 'studySetup':
+                    renderStudySetup();
+                    break;
+                case 'studyMode':
+                    renderStudyMode();
+                    break;
+            }
+            // Ensure the container is always centered
+            appContainer.parentElement.scrollTop = 0;
+        }
+
+        // Initial call to start the application: Load history first, then render
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAppState(); 
+            render();
+        });
+    </script>
+</body>
+</html>
